@@ -1,0 +1,847 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> logic options decls asserts build
+Rule 2     program -> logic decls asserts build
+Rule 3     logic -> LPAREN SETLOGIC QF_SLIA RPAREN
+Rule 4     logic -> LPAREN SETLOGIC QF_S RPAREN
+Rule 5     options -> option
+Rule 6     options -> options option
+Rule 7     option -> LPAREN SETOPTION COLON optionname BOOL RPAREN
+Rule 8     optionname -> PRODUCEMODELS
+Rule 9     optionname -> STRINGSEXP
+Rule 10    decls -> decl
+Rule 11    decls -> decls decl
+Rule 12    decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+Rule 13    asserts -> assert
+Rule 14    asserts -> asserts assert
+Rule 15    assert -> LPAREN ASSERT expr RPAREN
+Rule 16    expr -> pred
+Rule 17    expr -> LPAREN AND exprs RPAREN
+Rule 18    expr -> LPAREN OR exprs RPAREN
+Rule 19    expr -> LPAREN NOT expr RPAREN
+Rule 20    exprs -> expr
+Rule 21    exprs -> exprs expr
+Rule 22    pred -> LPAREN EQUALS str str RPAREN
+Rule 23    pred -> LPAREN CONTAINS str CONST RPAREN
+Rule 24    str -> ID
+Rule 25    str -> CONST
+Rule 26    str -> LPAREN CONCAT strs RPAREN
+Rule 27    str -> LPAREN REPLACEALL str CONST CONST RPAREN
+Rule 28    strs -> str
+Rule 29    strs -> strs str
+Rule 30    build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+
+Terminals, with rules where they appear
+
+AND                  : 17
+ASSERT               : 15
+BOOL                 : 7
+CHECKSAT             : 30
+COLON                : 7
+CONCAT               : 26
+CONST                : 23 25 27 27
+CONTAINS             : 23
+DECLAREFUN           : 12
+EQUALS               : 22
+GETMODEL             : 30
+ID                   : 12 24
+LPAREN               : 3 4 7 12 12 15 17 18 19 22 23 26 27 30 30
+NOT                  : 19
+OR                   : 18
+PRODUCEMODELS        : 8
+QF_S                 : 4
+QF_SLIA              : 3
+REPLACEALL           : 27
+RPAREN               : 3 4 7 12 12 15 17 18 19 22 23 26 27 30 30
+SETLOGIC             : 3 4
+SETOPTION            : 7
+STRING               : 12
+STRINGSEXP           : 9
+error                : 
+
+Nonterminals, with rules where they appear
+
+assert               : 13 14
+asserts              : 1 2 14
+build                : 1 2
+decl                 : 10 11
+decls                : 1 2 11
+expr                 : 15 19 20 21
+exprs                : 17 18 21
+logic                : 1 2
+option               : 5 6
+optionname           : 7
+options              : 1 6
+pred                 : 16
+program              : 0
+str                  : 22 22 23 27 28 29
+strs                 : 26 29
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . logic options decls asserts build
+    (2) program -> . logic decls asserts build
+    (3) logic -> . LPAREN SETLOGIC QF_SLIA RPAREN
+    (4) logic -> . LPAREN SETLOGIC QF_S RPAREN
+
+    LPAREN          shift and go to state 3
+
+    program                        shift and go to state 1
+    logic                          shift and go to state 2
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> logic . options decls asserts build
+    (2) program -> logic . decls asserts build
+    (5) options -> . option
+    (6) options -> . options option
+    (10) decls -> . decl
+    (11) decls -> . decls decl
+    (7) option -> . LPAREN SETOPTION COLON optionname BOOL RPAREN
+    (12) decl -> . LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+
+    LPAREN          shift and go to state 8
+
+    options                        shift and go to state 4
+    decls                          shift and go to state 5
+    option                         shift and go to state 6
+    decl                           shift and go to state 7
+
+state 3
+
+    (3) logic -> LPAREN . SETLOGIC QF_SLIA RPAREN
+    (4) logic -> LPAREN . SETLOGIC QF_S RPAREN
+
+    SETLOGIC        shift and go to state 9
+
+
+state 4
+
+    (1) program -> logic options . decls asserts build
+    (6) options -> options . option
+    (10) decls -> . decl
+    (11) decls -> . decls decl
+    (7) option -> . LPAREN SETOPTION COLON optionname BOOL RPAREN
+    (12) decl -> . LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+
+    LPAREN          shift and go to state 8
+
+    decls                          shift and go to state 10
+    option                         shift and go to state 11
+    decl                           shift and go to state 7
+
+state 5
+
+    (2) program -> logic decls . asserts build
+    (11) decls -> decls . decl
+    (13) asserts -> . assert
+    (14) asserts -> . asserts assert
+    (12) decl -> . LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+    (15) assert -> . LPAREN ASSERT expr RPAREN
+
+    LPAREN          shift and go to state 15
+
+    asserts                        shift and go to state 12
+    decl                           shift and go to state 13
+    assert                         shift and go to state 14
+
+state 6
+
+    (5) options -> option .
+
+    LPAREN          reduce using rule 5 (options -> option .)
+
+
+state 7
+
+    (10) decls -> decl .
+
+    LPAREN          reduce using rule 10 (decls -> decl .)
+
+
+state 8
+
+    (7) option -> LPAREN . SETOPTION COLON optionname BOOL RPAREN
+    (12) decl -> LPAREN . DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+
+    SETOPTION       shift and go to state 16
+    DECLAREFUN      shift and go to state 17
+
+
+state 9
+
+    (3) logic -> LPAREN SETLOGIC . QF_SLIA RPAREN
+    (4) logic -> LPAREN SETLOGIC . QF_S RPAREN
+
+    QF_SLIA         shift and go to state 18
+    QF_S            shift and go to state 19
+
+
+state 10
+
+    (1) program -> logic options decls . asserts build
+    (11) decls -> decls . decl
+    (13) asserts -> . assert
+    (14) asserts -> . asserts assert
+    (12) decl -> . LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+    (15) assert -> . LPAREN ASSERT expr RPAREN
+
+    LPAREN          shift and go to state 15
+
+    asserts                        shift and go to state 20
+    decl                           shift and go to state 13
+    assert                         shift and go to state 14
+
+state 11
+
+    (6) options -> options option .
+
+    LPAREN          reduce using rule 6 (options -> options option .)
+
+
+state 12
+
+    (2) program -> logic decls asserts . build
+    (14) asserts -> asserts . assert
+    (30) build -> . LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+    (15) assert -> . LPAREN ASSERT expr RPAREN
+
+    LPAREN          shift and go to state 23
+
+    build                          shift and go to state 21
+    assert                         shift and go to state 22
+
+state 13
+
+    (11) decls -> decls decl .
+
+    LPAREN          reduce using rule 11 (decls -> decls decl .)
+
+
+state 14
+
+    (13) asserts -> assert .
+
+    LPAREN          reduce using rule 13 (asserts -> assert .)
+
+
+state 15
+
+    (12) decl -> LPAREN . DECLAREFUN ID LPAREN RPAREN STRING RPAREN
+    (15) assert -> LPAREN . ASSERT expr RPAREN
+
+    DECLAREFUN      shift and go to state 17
+    ASSERT          shift and go to state 24
+
+
+state 16
+
+    (7) option -> LPAREN SETOPTION . COLON optionname BOOL RPAREN
+
+    COLON           shift and go to state 25
+
+
+state 17
+
+    (12) decl -> LPAREN DECLAREFUN . ID LPAREN RPAREN STRING RPAREN
+
+    ID              shift and go to state 26
+
+
+state 18
+
+    (3) logic -> LPAREN SETLOGIC QF_SLIA . RPAREN
+
+    RPAREN          shift and go to state 27
+
+
+state 19
+
+    (4) logic -> LPAREN SETLOGIC QF_S . RPAREN
+
+    RPAREN          shift and go to state 28
+
+
+state 20
+
+    (1) program -> logic options decls asserts . build
+    (14) asserts -> asserts . assert
+    (30) build -> . LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+    (15) assert -> . LPAREN ASSERT expr RPAREN
+
+    LPAREN          shift and go to state 23
+
+    build                          shift and go to state 29
+    assert                         shift and go to state 22
+
+state 21
+
+    (2) program -> logic decls asserts build .
+
+    $end            reduce using rule 2 (program -> logic decls asserts build .)
+
+
+state 22
+
+    (14) asserts -> asserts assert .
+
+    LPAREN          reduce using rule 14 (asserts -> asserts assert .)
+
+
+state 23
+
+    (30) build -> LPAREN . CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+    (15) assert -> LPAREN . ASSERT expr RPAREN
+
+    CHECKSAT        shift and go to state 30
+    ASSERT          shift and go to state 24
+
+
+state 24
+
+    (15) assert -> LPAREN ASSERT . expr RPAREN
+    (16) expr -> . pred
+    (17) expr -> . LPAREN AND exprs RPAREN
+    (18) expr -> . LPAREN OR exprs RPAREN
+    (19) expr -> . LPAREN NOT expr RPAREN
+    (22) pred -> . LPAREN EQUALS str str RPAREN
+    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+
+    LPAREN          shift and go to state 31
+
+    expr                           shift and go to state 32
+    pred                           shift and go to state 33
+
+state 25
+
+    (7) option -> LPAREN SETOPTION COLON . optionname BOOL RPAREN
+    (8) optionname -> . PRODUCEMODELS
+    (9) optionname -> . STRINGSEXP
+
+    PRODUCEMODELS   shift and go to state 35
+    STRINGSEXP      shift and go to state 36
+
+    optionname                     shift and go to state 34
+
+state 26
+
+    (12) decl -> LPAREN DECLAREFUN ID . LPAREN RPAREN STRING RPAREN
+
+    LPAREN          shift and go to state 37
+
+
+state 27
+
+    (3) logic -> LPAREN SETLOGIC QF_SLIA RPAREN .
+
+    LPAREN          reduce using rule 3 (logic -> LPAREN SETLOGIC QF_SLIA RPAREN .)
+
+
+state 28
+
+    (4) logic -> LPAREN SETLOGIC QF_S RPAREN .
+
+    LPAREN          reduce using rule 4 (logic -> LPAREN SETLOGIC QF_S RPAREN .)
+
+
+state 29
+
+    (1) program -> logic options decls asserts build .
+
+    $end            reduce using rule 1 (program -> logic options decls asserts build .)
+
+
+state 30
+
+    (30) build -> LPAREN CHECKSAT . RPAREN LPAREN GETMODEL RPAREN
+
+    RPAREN          shift and go to state 38
+
+
+state 31
+
+    (17) expr -> LPAREN . AND exprs RPAREN
+    (18) expr -> LPAREN . OR exprs RPAREN
+    (19) expr -> LPAREN . NOT expr RPAREN
+    (22) pred -> LPAREN . EQUALS str str RPAREN
+    (23) pred -> LPAREN . CONTAINS str CONST RPAREN
+
+    AND             shift and go to state 39
+    OR              shift and go to state 40
+    NOT             shift and go to state 41
+    EQUALS          shift and go to state 42
+    CONTAINS        shift and go to state 43
+
+
+state 32
+
+    (15) assert -> LPAREN ASSERT expr . RPAREN
+
+    RPAREN          shift and go to state 44
+
+
+state 33
+
+    (16) expr -> pred .
+
+    RPAREN          reduce using rule 16 (expr -> pred .)
+    LPAREN          reduce using rule 16 (expr -> pred .)
+
+
+state 34
+
+    (7) option -> LPAREN SETOPTION COLON optionname . BOOL RPAREN
+
+    BOOL            shift and go to state 45
+
+
+state 35
+
+    (8) optionname -> PRODUCEMODELS .
+
+    BOOL            reduce using rule 8 (optionname -> PRODUCEMODELS .)
+
+
+state 36
+
+    (9) optionname -> STRINGSEXP .
+
+    BOOL            reduce using rule 9 (optionname -> STRINGSEXP .)
+
+
+state 37
+
+    (12) decl -> LPAREN DECLAREFUN ID LPAREN . RPAREN STRING RPAREN
+
+    RPAREN          shift and go to state 46
+
+
+state 38
+
+    (30) build -> LPAREN CHECKSAT RPAREN . LPAREN GETMODEL RPAREN
+
+    LPAREN          shift and go to state 47
+
+
+state 39
+
+    (17) expr -> LPAREN AND . exprs RPAREN
+    (20) exprs -> . expr
+    (21) exprs -> . exprs expr
+    (16) expr -> . pred
+    (17) expr -> . LPAREN AND exprs RPAREN
+    (18) expr -> . LPAREN OR exprs RPAREN
+    (19) expr -> . LPAREN NOT expr RPAREN
+    (22) pred -> . LPAREN EQUALS str str RPAREN
+    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+
+    LPAREN          shift and go to state 31
+
+    exprs                          shift and go to state 48
+    expr                           shift and go to state 49
+    pred                           shift and go to state 33
+
+state 40
+
+    (18) expr -> LPAREN OR . exprs RPAREN
+    (20) exprs -> . expr
+    (21) exprs -> . exprs expr
+    (16) expr -> . pred
+    (17) expr -> . LPAREN AND exprs RPAREN
+    (18) expr -> . LPAREN OR exprs RPAREN
+    (19) expr -> . LPAREN NOT expr RPAREN
+    (22) pred -> . LPAREN EQUALS str str RPAREN
+    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+
+    LPAREN          shift and go to state 31
+
+    exprs                          shift and go to state 50
+    expr                           shift and go to state 49
+    pred                           shift and go to state 33
+
+state 41
+
+    (19) expr -> LPAREN NOT . expr RPAREN
+    (16) expr -> . pred
+    (17) expr -> . LPAREN AND exprs RPAREN
+    (18) expr -> . LPAREN OR exprs RPAREN
+    (19) expr -> . LPAREN NOT expr RPAREN
+    (22) pred -> . LPAREN EQUALS str str RPAREN
+    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+
+    LPAREN          shift and go to state 31
+
+    expr                           shift and go to state 51
+    pred                           shift and go to state 33
+
+state 42
+
+    (22) pred -> LPAREN EQUALS . str str RPAREN
+    (24) str -> . ID
+    (25) str -> . CONST
+    (26) str -> . LPAREN CONCAT strs RPAREN
+    (27) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
+
+    ID              shift and go to state 54
+    CONST           shift and go to state 55
+    LPAREN          shift and go to state 52
+
+    str                            shift and go to state 53
+
+state 43
+
+    (23) pred -> LPAREN CONTAINS . str CONST RPAREN
+    (24) str -> . ID
+    (25) str -> . CONST
+    (26) str -> . LPAREN CONCAT strs RPAREN
+    (27) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
+
+    ID              shift and go to state 54
+    CONST           shift and go to state 55
+    LPAREN          shift and go to state 52
+
+    str                            shift and go to state 56
+
+state 44
+
+    (15) assert -> LPAREN ASSERT expr RPAREN .
+
+    LPAREN          reduce using rule 15 (assert -> LPAREN ASSERT expr RPAREN .)
+
+
+state 45
+
+    (7) option -> LPAREN SETOPTION COLON optionname BOOL . RPAREN
+
+    RPAREN          shift and go to state 57
+
+
+state 46
+
+    (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN . STRING RPAREN
+
+    STRING          shift and go to state 58
+
+
+state 47
+
+    (30) build -> LPAREN CHECKSAT RPAREN LPAREN . GETMODEL RPAREN
+
+    GETMODEL        shift and go to state 59
+
+
+state 48
+
+    (17) expr -> LPAREN AND exprs . RPAREN
+    (21) exprs -> exprs . expr
+    (16) expr -> . pred
+    (17) expr -> . LPAREN AND exprs RPAREN
+    (18) expr -> . LPAREN OR exprs RPAREN
+    (19) expr -> . LPAREN NOT expr RPAREN
+    (22) pred -> . LPAREN EQUALS str str RPAREN
+    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+
+    RPAREN          shift and go to state 60
+    LPAREN          shift and go to state 31
+
+    expr                           shift and go to state 61
+    pred                           shift and go to state 33
+
+state 49
+
+    (20) exprs -> expr .
+
+    RPAREN          reduce using rule 20 (exprs -> expr .)
+    LPAREN          reduce using rule 20 (exprs -> expr .)
+
+
+state 50
+
+    (18) expr -> LPAREN OR exprs . RPAREN
+    (21) exprs -> exprs . expr
+    (16) expr -> . pred
+    (17) expr -> . LPAREN AND exprs RPAREN
+    (18) expr -> . LPAREN OR exprs RPAREN
+    (19) expr -> . LPAREN NOT expr RPAREN
+    (22) pred -> . LPAREN EQUALS str str RPAREN
+    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+
+    RPAREN          shift and go to state 62
+    LPAREN          shift and go to state 31
+
+    expr                           shift and go to state 61
+    pred                           shift and go to state 33
+
+state 51
+
+    (19) expr -> LPAREN NOT expr . RPAREN
+
+    RPAREN          shift and go to state 63
+
+
+state 52
+
+    (26) str -> LPAREN . CONCAT strs RPAREN
+    (27) str -> LPAREN . REPLACEALL str CONST CONST RPAREN
+
+    CONCAT          shift and go to state 64
+    REPLACEALL      shift and go to state 65
+
+
+state 53
+
+    (22) pred -> LPAREN EQUALS str . str RPAREN
+    (24) str -> . ID
+    (25) str -> . CONST
+    (26) str -> . LPAREN CONCAT strs RPAREN
+    (27) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
+
+    ID              shift and go to state 54
+    CONST           shift and go to state 55
+    LPAREN          shift and go to state 52
+
+    str                            shift and go to state 66
+
+state 54
+
+    (24) str -> ID .
+
+    ID              reduce using rule 24 (str -> ID .)
+    CONST           reduce using rule 24 (str -> ID .)
+    LPAREN          reduce using rule 24 (str -> ID .)
+    RPAREN          reduce using rule 24 (str -> ID .)
+
+
+state 55
+
+    (25) str -> CONST .
+
+    ID              reduce using rule 25 (str -> CONST .)
+    CONST           reduce using rule 25 (str -> CONST .)
+    LPAREN          reduce using rule 25 (str -> CONST .)
+    RPAREN          reduce using rule 25 (str -> CONST .)
+
+
+state 56
+
+    (23) pred -> LPAREN CONTAINS str . CONST RPAREN
+
+    CONST           shift and go to state 67
+
+
+state 57
+
+    (7) option -> LPAREN SETOPTION COLON optionname BOOL RPAREN .
+
+    LPAREN          reduce using rule 7 (option -> LPAREN SETOPTION COLON optionname BOOL RPAREN .)
+
+
+state 58
+
+    (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING . RPAREN
+
+    RPAREN          shift and go to state 68
+
+
+state 59
+
+    (30) build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL . RPAREN
+
+    RPAREN          shift and go to state 69
+
+
+state 60
+
+    (17) expr -> LPAREN AND exprs RPAREN .
+
+    RPAREN          reduce using rule 17 (expr -> LPAREN AND exprs RPAREN .)
+    LPAREN          reduce using rule 17 (expr -> LPAREN AND exprs RPAREN .)
+
+
+state 61
+
+    (21) exprs -> exprs expr .
+
+    RPAREN          reduce using rule 21 (exprs -> exprs expr .)
+    LPAREN          reduce using rule 21 (exprs -> exprs expr .)
+
+
+state 62
+
+    (18) expr -> LPAREN OR exprs RPAREN .
+
+    RPAREN          reduce using rule 18 (expr -> LPAREN OR exprs RPAREN .)
+    LPAREN          reduce using rule 18 (expr -> LPAREN OR exprs RPAREN .)
+
+
+state 63
+
+    (19) expr -> LPAREN NOT expr RPAREN .
+
+    RPAREN          reduce using rule 19 (expr -> LPAREN NOT expr RPAREN .)
+    LPAREN          reduce using rule 19 (expr -> LPAREN NOT expr RPAREN .)
+
+
+state 64
+
+    (26) str -> LPAREN CONCAT . strs RPAREN
+    (28) strs -> . str
+    (29) strs -> . strs str
+    (24) str -> . ID
+    (25) str -> . CONST
+    (26) str -> . LPAREN CONCAT strs RPAREN
+    (27) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
+
+    ID              shift and go to state 54
+    CONST           shift and go to state 55
+    LPAREN          shift and go to state 52
+
+    strs                           shift and go to state 70
+    str                            shift and go to state 71
+
+state 65
+
+    (27) str -> LPAREN REPLACEALL . str CONST CONST RPAREN
+    (24) str -> . ID
+    (25) str -> . CONST
+    (26) str -> . LPAREN CONCAT strs RPAREN
+    (27) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
+
+    ID              shift and go to state 54
+    CONST           shift and go to state 55
+    LPAREN          shift and go to state 52
+
+    str                            shift and go to state 72
+
+state 66
+
+    (22) pred -> LPAREN EQUALS str str . RPAREN
+
+    RPAREN          shift and go to state 73
+
+
+state 67
+
+    (23) pred -> LPAREN CONTAINS str CONST . RPAREN
+
+    RPAREN          shift and go to state 74
+
+
+state 68
+
+    (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN .
+
+    LPAREN          reduce using rule 12 (decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN .)
+
+
+state 69
+
+    (30) build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN .
+
+    $end            reduce using rule 30 (build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN .)
+
+
+state 70
+
+    (26) str -> LPAREN CONCAT strs . RPAREN
+    (29) strs -> strs . str
+    (24) str -> . ID
+    (25) str -> . CONST
+    (26) str -> . LPAREN CONCAT strs RPAREN
+    (27) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
+
+    RPAREN          shift and go to state 75
+    ID              shift and go to state 54
+    CONST           shift and go to state 55
+    LPAREN          shift and go to state 52
+
+    str                            shift and go to state 76
+
+state 71
+
+    (28) strs -> str .
+
+    RPAREN          reduce using rule 28 (strs -> str .)
+    ID              reduce using rule 28 (strs -> str .)
+    CONST           reduce using rule 28 (strs -> str .)
+    LPAREN          reduce using rule 28 (strs -> str .)
+
+
+state 72
+
+    (27) str -> LPAREN REPLACEALL str . CONST CONST RPAREN
+
+    CONST           shift and go to state 77
+
+
+state 73
+
+    (22) pred -> LPAREN EQUALS str str RPAREN .
+
+    RPAREN          reduce using rule 22 (pred -> LPAREN EQUALS str str RPAREN .)
+    LPAREN          reduce using rule 22 (pred -> LPAREN EQUALS str str RPAREN .)
+
+
+state 74
+
+    (23) pred -> LPAREN CONTAINS str CONST RPAREN .
+
+    RPAREN          reduce using rule 23 (pred -> LPAREN CONTAINS str CONST RPAREN .)
+    LPAREN          reduce using rule 23 (pred -> LPAREN CONTAINS str CONST RPAREN .)
+
+
+state 75
+
+    (26) str -> LPAREN CONCAT strs RPAREN .
+
+    ID              reduce using rule 26 (str -> LPAREN CONCAT strs RPAREN .)
+    CONST           reduce using rule 26 (str -> LPAREN CONCAT strs RPAREN .)
+    LPAREN          reduce using rule 26 (str -> LPAREN CONCAT strs RPAREN .)
+    RPAREN          reduce using rule 26 (str -> LPAREN CONCAT strs RPAREN .)
+
+
+state 76
+
+    (29) strs -> strs str .
+
+    RPAREN          reduce using rule 29 (strs -> strs str .)
+    ID              reduce using rule 29 (strs -> strs str .)
+    CONST           reduce using rule 29 (strs -> strs str .)
+    LPAREN          reduce using rule 29 (strs -> strs str .)
+
+
+state 77
+
+    (27) str -> LPAREN REPLACEALL str CONST . CONST RPAREN
+
+    CONST           shift and go to state 78
+
+
+state 78
+
+    (27) str -> LPAREN REPLACEALL str CONST CONST . RPAREN
+
+    RPAREN          shift and go to state 79
+
+
+state 79
+
+    (27) str -> LPAREN REPLACEALL str CONST CONST RPAREN .
+
+    ID              reduce using rule 27 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
+    CONST           reduce using rule 27 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
+    LPAREN          reduce using rule 27 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
+    RPAREN          reduce using rule 27 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
+
