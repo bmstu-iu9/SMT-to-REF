@@ -88,7 +88,7 @@ def p_pred(p):
 def p_id(p):
     """str : ID"""
     if p[1] not in funcs:
-        print("Use of undeclared identifier {}!", p[1])
+        print("Use of undeclared identifier {}!".format(p[1]))
         exit(3)
     p[0] = ('str',) + tuple(p[1:])
 
