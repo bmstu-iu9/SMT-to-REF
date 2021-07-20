@@ -104,6 +104,11 @@ def t_CONST(t):
     return t
 
 
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     exit(2)
@@ -113,7 +118,7 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_COLON = r':'
 
-t_ignore = ' \n\t'
+t_ignore = ' \t'
 
 lexer = lex.lex()
 

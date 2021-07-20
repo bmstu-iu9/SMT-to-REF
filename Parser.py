@@ -9,6 +9,11 @@ options = {
 funcs = set()
 
 
+def find_column(input, token):
+    line_start = input.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
+
 def p_program(p):
     """program : logic options decls asserts build
                | logic decls asserts build"""
@@ -85,6 +90,12 @@ def p_pred(p):
     p[0] = ('pred',) + tuple(p[1:])
 
 
+def p_pred_error(p):
+    """pred : LPAREN CONTAINS str error RPAREN"""
+    print("Second argument of \'contains\' must be a constant!\n")
+    exit(3)
+
+
 def p_id(p):
     """str : ID"""
     if p[1] not in funcs:
@@ -101,13 +112,21 @@ def p_str(p):
 
 def p_replaceall(p):
     """str : LPAREN REPLACEALL str CONST CONST RPAREN"""
-    if not p[4]:
-        print("Cannot replace an empty string!")
-        exit(3)
     if not options['strings-exp']:
         print("Use of \'replace_all\' with strings-exp set to false!")
         exit(3)
+    if not p[4]:
+        print("Cannot replace an empty string!")
+        exit(3)
     p[0] = ('str',) + tuple(p[1:])
+
+
+def p_replaceall_error(p):
+    """str : LPAREN REPLACEALL str error CONST RPAREN
+           | LPAREN REPLACEALL str CONST error RPAREN
+           | LPAREN REPLACEALL str error error RPAREN"""
+    print("Second and third arguments of \'replace_all\' must be constants!\n")
+    exit(3)
 
 
 def p_strs(p):
@@ -122,13 +141,14 @@ def p_build(p):
 
 
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntax error at ({}, {})!".format(p.lineno, find_column(data, p)))
 
-
-parser = yacc.yacc()
 
 if __name__ == '__main__':
     with open('input', "r") as input_file:
         data = input_file.read()
+
+    parser = yacc.yacc()
+
     result = parser.parse(data)
     print(result)

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ASSERT BOOL CHECKSAT COLON CONCAT CONST CONTAINS DECLAREFUN EQUALS GETMODEL ID LPAREN NOT OR PRODUCEMODELS QF_S QF_SLIA REPLACEALL RPAREN SETLOGIC SETOPTION STRING STRINGSEXPprogram : logic options decls asserts build\n               | logic decls asserts buildlogic : LPAREN SETLOGIC QF_SLIA RPAREN\n             | LPAREN SETLOGIC QF_S RPARENoptions : option\n               | options optionoption : LPAREN SETOPTION COLON optionname BOOL RPARENoptionname : PRODUCEMODELS\n                  | STRINGSEXPdecls : decl\n             | decls decldecl : LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPARENasserts : assert\n             | asserts assertassert : LPAREN ASSERT expr RPARENexpr : pred\n            | LPAREN AND exprs RPAREN\n            | LPAREN OR exprs RPAREN\n            | LPAREN NOT expr RPARENexprs : expr\n             | exprs exprpred : LPAREN EQUALS str str RPAREN\n            | LPAREN CONTAINS str CONST RPARENstr : IDstr : CONST\n           | LPAREN CONCAT strs RPARENstr : LPAREN REPLACEALL str CONST CONST RPARENstrs : str\n            | strs strbuild : LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN'
+_lr_signature = 'AND ASSERT BOOL CHECKSAT COLON CONCAT CONST CONTAINS DECLAREFUN EQUALS GETMODEL ID LPAREN NOT OR PRODUCEMODELS QF_S QF_SLIA REPLACEALL RPAREN SETLOGIC SETOPTION STRING STRINGSEXPprogram : logic options decls asserts build\n               | logic decls asserts buildlogic : LPAREN SETLOGIC QF_SLIA RPAREN\n             | LPAREN SETLOGIC QF_S RPARENoptions : option\n               | options optionoption : LPAREN SETOPTION COLON optionname BOOL RPARENoptionname : PRODUCEMODELS\n                  | STRINGSEXPdecls : decl\n             | decls decldecl : LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPARENasserts : assert\n             | asserts assertassert : LPAREN ASSERT expr RPARENexpr : pred\n            | LPAREN AND exprs RPAREN\n            | LPAREN OR exprs RPAREN\n            | LPAREN NOT expr RPARENexprs : expr\n             | exprs exprpred : LPAREN EQUALS str str RPAREN\n            | LPAREN CONTAINS str CONST RPARENpred : LPAREN CONTAINS str error RPARENstr : IDstr : CONST\n           | LPAREN CONCAT strs RPARENstr : LPAREN REPLACEALL str CONST CONST RPARENstr : LPAREN REPLACEALL str error CONST RPAREN\n           | LPAREN REPLACEALL str CONST error RPAREN\n           | LPAREN REPLACEALL str error error RPARENstrs : str\n            | strs strbuild : LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN'
     
-_lr_action_items = {'LPAREN':([0,2,4,5,6,7,10,11,12,13,14,20,22,24,26,27,28,33,38,39,40,41,42,43,44,48,49,50,53,54,55,57,60,61,62,63,64,65,68,70,71,73,74,75,76,79,],[3,8,8,15,-5,-10,15,-6,23,-11,-13,23,-14,31,37,-3,-4,-16,47,31,31,31,52,52,-15,31,-20,31,52,-24,-25,-7,-17,-21,-18,-19,52,52,-12,52,-28,-22,-23,-26,-29,-27,]),'$end':([1,21,29,69,],[0,-2,-1,-30,]),'SETLOGIC':([3,],[9,]),'SETOPTION':([8,],[16,]),'DECLAREFUN':([8,15,],[17,17,]),'QF_SLIA':([9,],[18,]),'QF_S':([9,],[19,]),'ASSERT':([15,23,],[24,24,]),'COLON':([16,],[25,]),'ID':([17,42,43,53,54,55,64,65,70,71,75,76,79,],[26,54,54,54,-24,-25,54,54,54,-28,-26,-29,-27,]),'RPAREN':([18,19,30,32,33,37,45,48,49,50,51,54,55,58,59,60,61,62,63,66,67,70,71,73,74,75,76,78,79,],[27,28,38,44,-16,46,57,60,-20,62,63,-24,-25,68,69,-17,-21,-18,-19,73,74,75,-28,-22,-23,-26,-29,79,-27,]),'CHECKSAT':([23,],[30,]),'PRODUCEMODELS':([25,],[35,]),'STRINGSEXP':([25,],[36,]),'AND':([31,],[39,]),'OR':([31,],[40,]),'NOT':([31,],[41,]),'EQUALS':([31,],[42,]),'CONTAINS':([31,],[43,]),'BOOL':([34,35,36,],[45,-8,-9,]),'CONST':([42,43,53,54,55,56,64,65,70,71,72,75,76,77,79,],[55,55,55,-24,-25,67,55,55,55,-28,77,-26,-29,78,-27,]),'STRING':([46,],[58,]),'GETMODEL':([47,],[59,]),'CONCAT':([52,],[64,]),'REPLACEALL':([52,],[65,]),}
+_lr_action_items = {'LPAREN':([0,2,4,5,6,7,10,11,12,13,14,20,22,24,26,27,28,33,38,39,40,41,42,43,44,48,49,50,53,54,55,57,60,61,62,63,64,65,69,71,72,74,75,76,77,78,85,86,87,88,],[3,8,8,15,-5,-10,15,-6,23,-11,-13,23,-14,31,37,-3,-4,-16,47,31,31,31,52,52,-15,31,-20,31,52,-25,-26,-7,-17,-21,-18,-19,52,52,-12,52,-32,-22,-23,-24,-27,-33,-28,-30,-31,-29,]),'$end':([1,21,29,70,],[0,-2,-1,-34,]),'SETLOGIC':([3,],[9,]),'SETOPTION':([8,],[16,]),'DECLAREFUN':([8,15,],[17,17,]),'QF_SLIA':([9,],[18,]),'QF_S':([9,],[19,]),'ASSERT':([15,23,],[24,24,]),'COLON':([16,],[25,]),'ID':([17,42,43,53,54,55,64,65,71,72,77,78,85,86,87,88,],[26,54,54,54,-25,-26,54,54,54,-32,-27,-33,-28,-30,-31,-29,]),'RPAREN':([18,19,30,32,33,37,45,48,49,50,51,54,55,58,59,60,61,62,63,66,67,68,71,72,74,75,76,77,78,81,82,83,84,85,86,87,88,],[27,28,38,44,-16,46,57,60,-20,62,63,-25,-26,69,70,-17,-21,-18,-19,74,75,76,77,-32,-22,-23,-24,-27,-33,85,86,87,88,-28,-30,-31,-29,]),'CHECKSAT':([23,],[30,]),'PRODUCEMODELS':([25,],[35,]),'STRINGSEXP':([25,],[36,]),'AND':([31,],[39,]),'OR':([31,],[40,]),'NOT':([31,],[41,]),'EQUALS':([31,],[42,]),'CONTAINS':([31,],[43,]),'BOOL':([34,35,36,],[45,-8,-9,]),'CONST':([42,43,53,54,55,56,64,65,71,72,73,77,78,79,80,85,86,87,88,],[55,55,55,-25,-26,67,55,55,55,-32,79,-27,-33,81,84,-28,-30,-31,-29,]),'STRING':([46,],[58,]),'GETMODEL':([47,],[59,]),'CONCAT':([52,],[64,]),'REPLACEALL':([52,],[65,]),'error':([54,55,56,73,77,79,80,85,86,87,88,],[-25,-26,68,80,-27,82,83,-28,-30,-31,-29,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'logic':([0,],[2,]),'options':([2,],[4,]),'decls':([2,4,],[5,10,]),'option':([2,4,],[6,11,]),'decl':([2,4,5,10,],[7,7,13,13,]),'asserts':([5,10,],[12,20,]),'assert':([5,10,12,20,],[14,14,22,22,]),'build':([12,20,],[21,29,]),'expr':([24,39,40,41,48,50,],[32,49,49,51,61,61,]),'pred':([24,39,40,41,48,50,],[33,33,33,33,33,33,]),'optionname':([25,],[34,]),'exprs':([39,40,],[48,50,]),'str':([42,43,53,64,65,70,],[53,56,66,71,72,76,]),'strs':([64,],[70,]),}
+_lr_goto_items = {'program':([0,],[1,]),'logic':([0,],[2,]),'options':([2,],[4,]),'decls':([2,4,],[5,10,]),'option':([2,4,],[6,11,]),'decl':([2,4,5,10,],[7,7,13,13,]),'asserts':([5,10,],[12,20,]),'assert':([5,10,12,20,],[14,14,22,22,]),'build':([12,20,],[21,29,]),'expr':([24,39,40,41,48,50,],[32,49,49,51,61,61,]),'pred':([24,39,40,41,48,50,],[33,33,33,33,33,33,]),'optionname':([25,],[34,]),'exprs':([39,40,],[48,50,]),'str':([42,43,53,64,65,71,],[53,56,66,72,73,78,]),'strs':([64,],[71,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,34 +27,38 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> logic options decls asserts build','program',5,'p_program','Parser.py',13),
-  ('program -> logic decls asserts build','program',4,'p_program','Parser.py',14),
-  ('logic -> LPAREN SETLOGIC QF_SLIA RPAREN','logic',4,'p_logic','Parser.py',19),
-  ('logic -> LPAREN SETLOGIC QF_S RPAREN','logic',4,'p_logic','Parser.py',20),
-  ('options -> option','options',1,'p_options','Parser.py',25),
-  ('options -> options option','options',2,'p_options','Parser.py',26),
-  ('option -> LPAREN SETOPTION COLON optionname BOOL RPAREN','option',6,'p_option','Parser.py',31),
-  ('optionname -> PRODUCEMODELS','optionname',1,'p_optionname','Parser.py',37),
-  ('optionname -> STRINGSEXP','optionname',1,'p_optionname','Parser.py',38),
-  ('decls -> decl','decls',1,'p_decls','Parser.py',43),
-  ('decls -> decls decl','decls',2,'p_decls','Parser.py',44),
-  ('decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN','decl',7,'p_decl','Parser.py',49),
-  ('asserts -> assert','asserts',1,'p_asserts','Parser.py',55),
-  ('asserts -> asserts assert','asserts',2,'p_asserts','Parser.py',56),
-  ('assert -> LPAREN ASSERT expr RPAREN','assert',4,'p_assert','Parser.py',61),
-  ('expr -> pred','expr',1,'p_expr','Parser.py',66),
-  ('expr -> LPAREN AND exprs RPAREN','expr',4,'p_expr','Parser.py',67),
-  ('expr -> LPAREN OR exprs RPAREN','expr',4,'p_expr','Parser.py',68),
-  ('expr -> LPAREN NOT expr RPAREN','expr',4,'p_expr','Parser.py',69),
-  ('exprs -> expr','exprs',1,'p_exprs','Parser.py',74),
-  ('exprs -> exprs expr','exprs',2,'p_exprs','Parser.py',75),
-  ('pred -> LPAREN EQUALS str str RPAREN','pred',5,'p_pred','Parser.py',80),
-  ('pred -> LPAREN CONTAINS str CONST RPAREN','pred',5,'p_pred','Parser.py',81),
-  ('str -> ID','str',1,'p_id','Parser.py',86),
-  ('str -> CONST','str',1,'p_str','Parser.py',94),
-  ('str -> LPAREN CONCAT strs RPAREN','str',4,'p_str','Parser.py',95),
-  ('str -> LPAREN REPLACEALL str CONST CONST RPAREN','str',6,'p_replaceall','Parser.py',100),
-  ('strs -> str','strs',1,'p_strs','Parser.py',108),
-  ('strs -> strs str','strs',2,'p_strs','Parser.py',109),
-  ('build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN','build',6,'p_build','Parser.py',114),
+  ('program -> logic options decls asserts build','program',5,'p_program','Parser.py',18),
+  ('program -> logic decls asserts build','program',4,'p_program','Parser.py',19),
+  ('logic -> LPAREN SETLOGIC QF_SLIA RPAREN','logic',4,'p_logic','Parser.py',24),
+  ('logic -> LPAREN SETLOGIC QF_S RPAREN','logic',4,'p_logic','Parser.py',25),
+  ('options -> option','options',1,'p_options','Parser.py',30),
+  ('options -> options option','options',2,'p_options','Parser.py',31),
+  ('option -> LPAREN SETOPTION COLON optionname BOOL RPAREN','option',6,'p_option','Parser.py',36),
+  ('optionname -> PRODUCEMODELS','optionname',1,'p_optionname','Parser.py',42),
+  ('optionname -> STRINGSEXP','optionname',1,'p_optionname','Parser.py',43),
+  ('decls -> decl','decls',1,'p_decls','Parser.py',48),
+  ('decls -> decls decl','decls',2,'p_decls','Parser.py',49),
+  ('decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN','decl',7,'p_decl','Parser.py',54),
+  ('asserts -> assert','asserts',1,'p_asserts','Parser.py',60),
+  ('asserts -> asserts assert','asserts',2,'p_asserts','Parser.py',61),
+  ('assert -> LPAREN ASSERT expr RPAREN','assert',4,'p_assert','Parser.py',66),
+  ('expr -> pred','expr',1,'p_expr','Parser.py',71),
+  ('expr -> LPAREN AND exprs RPAREN','expr',4,'p_expr','Parser.py',72),
+  ('expr -> LPAREN OR exprs RPAREN','expr',4,'p_expr','Parser.py',73),
+  ('expr -> LPAREN NOT expr RPAREN','expr',4,'p_expr','Parser.py',74),
+  ('exprs -> expr','exprs',1,'p_exprs','Parser.py',79),
+  ('exprs -> exprs expr','exprs',2,'p_exprs','Parser.py',80),
+  ('pred -> LPAREN EQUALS str str RPAREN','pred',5,'p_pred','Parser.py',85),
+  ('pred -> LPAREN CONTAINS str CONST RPAREN','pred',5,'p_pred','Parser.py',86),
+  ('pred -> LPAREN CONTAINS str error RPAREN','pred',5,'p_pred_error','Parser.py',94),
+  ('str -> ID','str',1,'p_id','Parser.py',100),
+  ('str -> CONST','str',1,'p_str','Parser.py',108),
+  ('str -> LPAREN CONCAT strs RPAREN','str',4,'p_str','Parser.py',109),
+  ('str -> LPAREN REPLACEALL str CONST CONST RPAREN','str',6,'p_replaceall','Parser.py',114),
+  ('str -> LPAREN REPLACEALL str error CONST RPAREN','str',6,'p_replaceall_error','Parser.py',125),
+  ('str -> LPAREN REPLACEALL str CONST error RPAREN','str',6,'p_replaceall_error','Parser.py',126),
+  ('str -> LPAREN REPLACEALL str error error RPAREN','str',6,'p_replaceall_error','Parser.py',127),
+  ('strs -> str','strs',1,'p_strs','Parser.py',133),
+  ('strs -> strs str','strs',2,'p_strs','Parser.py',134),
+  ('build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN','build',6,'p_build','Parser.py',139),
 ]
