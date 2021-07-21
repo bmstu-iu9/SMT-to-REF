@@ -1,5 +1,21 @@
 import ply.lex as lex
 
+
+def find_column(token):
+    line_start = lexer.lexdata.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
+
+class Error(Exception):
+    """Base error class"""
+    pass
+
+
+class IllegalCharacterError(Error):
+    def __init__(self, message):
+        self.message = message
+
+
 reserved = {
     'String': 'STRING',
     'assert': 'ASSERT',
@@ -110,8 +126,7 @@ def t_newline(t):
 
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    exit(2)
+    raise IllegalCharacterError('Illegal character \'{}\' at ({}, {})'.format(t.value[0], lexer.lineno, find_column(t)))
 
 
 t_LPAREN = r'\('

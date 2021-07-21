@@ -1,5 +1,5 @@
 import ply.yacc as yacc
-from Lexer import tokens
+from Lexer import tokens, find_column
 
 options = {
     'strings-exp': False,
@@ -9,9 +9,29 @@ options = {
 funcs = set()
 
 
-def find_column(input, token):
-    line_start = input.rfind('\n', 0, token.lexpos) + 1
-    return (token.lexpos - line_start) + 1
+class Error(Exception):
+    """Base error class"""
+    pass
+
+
+class WrongOptionError(Error):
+    def __init__(self, message):
+        self.message = message
+
+
+class BadArgumentError(Error):
+    def __init__(self, message):
+        self.message = message
+
+
+class UndeclaredIdentError(Error):
+    def __init__(self, message):
+        self.message = message
+
+
+class GenericError(Error):
+    def __init__(self, message):
+        self.message = message
 
 
 def p_program(p):
@@ -85,22 +105,19 @@ def p_pred(p):
     """pred : LPAREN EQUALS str str RPAREN
             | LPAREN CONTAINS str CONST RPAREN"""
     if p[2] == 'str.contains' and not options['strings-exp']:
-        print("Use of \'contains\' with strings-exp set to false!")
-        exit(3)
+        raise WrongOptionError('Use of \'contains\' with strings-exp set to false!')
     p[0] = ('pred',) + tuple(p[1:])
 
 
 def p_pred_error(p):
     """pred : LPAREN CONTAINS str error RPAREN"""
-    print("Second argument of \'contains\' must be a constant!\n")
-    exit(3)
+    raise BadArgumentError('Second argument of \'contains\' must be a constant!\n')
 
 
 def p_id(p):
     """str : ID"""
     if p[1] not in funcs:
-        print("Use of undeclared identifier {}!".format(p[1]))
-        exit(3)
+        raise UndeclaredIdentError('Use of undeclared identifier {}!'.format(p[1]))
     p[0] = ('str',) + tuple(p[1:])
 
 
@@ -113,11 +130,9 @@ def p_str(p):
 def p_replaceall(p):
     """str : LPAREN REPLACEALL str CONST CONST RPAREN"""
     if not options['strings-exp']:
-        print("Use of \'replace_all\' with strings-exp set to false!")
-        exit(3)
+        raise WrongOptionError('Use of \'replace_all\' with strings-exp set to false!')
     if not p[4]:
-        print("Cannot replace an empty string!")
-        exit(3)
+        raise BadArgumentError('Cannot replace an empty string!')
     p[0] = ('str',) + tuple(p[1:])
 
 
@@ -125,8 +140,7 @@ def p_replaceall_error(p):
     """str : LPAREN REPLACEALL str error CONST RPAREN
            | LPAREN REPLACEALL str CONST error RPAREN
            | LPAREN REPLACEALL str error error RPAREN"""
-    print("Second and third arguments of \'replace_all\' must be constants!\n")
-    exit(3)
+    raise BadArgumentError('Second and third arguments of \'replace_all\' must be constants!\n')
 
 
 def p_strs(p):
@@ -141,14 +155,17 @@ def p_build(p):
 
 
 def p_error(p):
-    print("Syntax error at ({}, {})!".format(p.lineno, find_column(data, p)))
+    print('Unexpected token \'{}\' at ({}, {})!'.format(p.value, p.lineno, find_column(p)))
+
+
+parser = yacc.yacc()
 
 
 if __name__ == '__main__':
-    with open('input', "r") as input_file:
+    with open('tests/test_parentheses_inside_const.smt2', 'r') as input_file:
         data = input_file.read()
 
-    parser = yacc.yacc()
-
     result = parser.parse(data)
+    if not result:
+        raise GenericError('Parsing failed!')
     print(result)

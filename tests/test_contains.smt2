@@ -3,7 +3,7 @@
 
 (declare-fun x () String)
 (declare-fun y () String)
-(assert (str.contains (str.replace_all x "AB" "") y))
+(assert (str.contains (str.replace_all x "AB" "s") y))
 
 (check-sat)
 (get-model)
