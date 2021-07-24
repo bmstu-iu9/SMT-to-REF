@@ -1,6 +1,6 @@
 import ply.yacc as yacc
 from Lexer import tokens, find_column
-
+import Translate
 options = {
     'strings-exp': False,
     'produce-models': False
@@ -168,4 +168,7 @@ if __name__ == '__main__':
     result = parser.parse(data)
     if not result:
         raise GenericError('Parsing failed!')
+
+    result,preds= Translate.translateToCNF(list(result))
     print(result)
+    print(preds)
