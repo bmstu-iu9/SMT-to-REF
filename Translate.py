@@ -35,10 +35,10 @@ def predCreate(data,preds):
         preds.append(("p" + str(len(preds)),(data[3]),data[2],data[3],data[4]))
     else:
         preds.append(("p" + str(len(preds)),(data[3],data[4]),data[2], data[3], data[4]))
-        del data[2]
-        del data[2]
-        del data[2]
-        data.insert(2,"p" + str(len(preds)))
+    del data[2]
+    del data[2]
+    del data[2]
+    data.insert(2,"p" + str(len(preds)-1))
     return data,preds
 
 
@@ -78,32 +78,50 @@ def distrCheak(cheak,distr_mass,data):
 
 def packSimple(pack,i,data):
     pack.append("exprs")
-    pack.append(data[i])
+    pack.append(list(data[i]))
     if (len(data)-1 > i):
         pack.insert(1,list())
-        pack[1] = packSimple(list(),i+1,data)
+        pack[1] = list(packSimple(list(),i+1,data))
     return pack
 
 
 def cheakList(mass,choiseList,index):
+    cheak = True
     choiseList[index] = choiseList[index] + 1
-    if (choiseList[index] >= len(mass[index])):
+    if (choiseList[index] >= len(mass[index+1])):
         choiseList[index] = 0
-        if (index -1 > 0):
-            choiseList = cheakList(mass,choiseList,index - 1)
-    return choiseList
+        if (index > 0):
+            cheak ,choiseList = cheakList(mass,choiseList,index - 1)
+        else:
+            return False,choiseList
+    return cheak, choiseList
+
+
+def getFromDistrMass(distr_mass, pos):
+   pass
 
 
 def packFromChoiseList(i,pack, distr_mass, choiseList):
+    lis = list(pack)
     if (len(pack) > 2):
-        pack[1] = packFromChoiseList(i,pack[1],distr_mass,choiseList)
+        pack[1] = packFromChoiseList(i,list(pack[1]),distr_mass,choiseList)
     else:
         pack.insert(1,list())
+        pack[1] = list(pack[1])
         pack[1].append("exprs")
-        pack[1].append(distr_mass[i][choiseList[i]])
+        pack[1].append(distr_mass[i+1][choiseList[i]])
         if (i+1 < len(choiseList)):
-            pack.insert(1,packFromChoiseList(i+1,pack[1],distr_mass,choiseList))
+            pack[1]= packFromChoiseList(i+1,list(pack[1]),distr_mass,choiseList)
     return pack
+
+
+def reloadMass(distr_mass,lis):
+    if (len(distr_mass) > 2):
+        lis.append(distr_mass[2])
+        lis.append(reloadMass(distr_mass[1],list()))
+    else:
+        lis.append(distr_mass[1])
+    return lis
 
 
 def packD(pack,data,distr_mass, choiseList):
@@ -114,9 +132,10 @@ def packD(pack,data,distr_mass, choiseList):
     data[1].append("or")
     data[1].append(list())
     data[1].append(")")
-    data[1] = packFromChoiseList(0,pack,distr_mass,choiseList)
-    choiseList = cheakList(distr_mass,choiseList,len(choiseList)-1)
-    data.insert(1,packD(pack,data[1],distr_mass,choiseList))
+    data[1][3] = packFromChoiseList(0,list(pack),distr_mass,choiseList)
+    cheak, choiseList = cheakList(distr_mass,choiseList,len(choiseList)-1)
+    if (cheak):
+        data.insert(1,packD(pack,list(),distr_mass,choiseList))
     return data
 
 
@@ -128,8 +147,9 @@ def app(data,distr_mass):
     choiseList = list()
     for i in range(1,len(distr_mass)):
         choiseList.append(0)
-    data[3] = packD(pack,data[3],distr_mass,choiseList)
-    pass
+        distr_mass[i] = reloadMass(distr_mass[i], list());
+    data[3] = packD(pack,list(),distr_mass,choiseList)
+    return data
 
 
 def distrAppication(data):
@@ -146,8 +166,9 @@ def distrAppication(data):
         for i in range(1, len(data)):
             t = data[i]
             if (type(t) == list or type(t) == tuple):
-                data[i] = distrAppication(list(t))
-        return data,
+               # data[i] = list(data[i])
+                data[i] = list(distrAppication(list(t)))
+        return data
 
 
 def translateToCNF(data):
@@ -156,6 +177,6 @@ def translateToCNF(data):
         t = data[i]
         if t[0] == "asserts":
             data[i],preds = createPredAndDelNot(list(t), list(preds))
-          #  data[i] = distrAppication(list(data[i]))
+            data[i] = distrAppication(list(data[i]))
 
     return data,preds
