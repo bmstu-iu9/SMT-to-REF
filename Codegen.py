@@ -5,6 +5,14 @@ class Converter:
         for i in preds:
             self.preds[i[0]] = i[1:]
         self.decls = set()
+        self.decls.add('AND {\n'
+                       '    e.x1 False e.x2 = False;\n'
+                       '    e.Z = True;\n'
+                       '}\n')
+        self.decls.add('OR {\n'
+                       '    e.x1 True e.x2 = True;\n'
+                       '    e.Z = False;\n'
+                       '}\n')
         self.sent = ''
         self.entry = ''
 
