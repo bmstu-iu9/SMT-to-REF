@@ -3,6 +3,7 @@ from Lexer import tokens, find_column
 import Translate
 from tkinter import *
 from tkinter import filedialog as fd, ttk
+from Codegen import Converter
 
 options = {
     'strings-exp': False,
@@ -114,7 +115,7 @@ def p_exprs(p):
 
 def p_pred(p):
     """pred : LPAREN EQUALS str str RPAREN
-            | LPAREN CONTAINS str CONST RPAREN"""
+            | LPAREN CONTAINS str const RPAREN"""
     if p[2] == 'str.contains' and not options['strings-exp']:
         raise WrongOptionError('Use of \'contains\' with strings-exp set to false!')
     p[0] = ('pred',) + tuple(p[1:])
@@ -133,13 +134,18 @@ def p_id(p):
 
 
 def p_str(p):
-    """str : CONST
+    """str : const
            | LPAREN CONCAT strs RPAREN"""
     p[0] = ('str',) + tuple(p[1:])
 
 
+def p_const(p):
+    """const : CONST"""
+    p[0] = ('const',) + tuple(p[1:])
+
+
 def p_replaceall(p):
-    """str : LPAREN REPLACEALL str CONST CONST RPAREN"""
+    """str : LPAREN REPLACEALL str const const RPAREN"""
     if not options['strings-exp']:
         raise WrongOptionError('Use of \'replace_all\' with strings-exp set to false!')
     if not p[4]:
@@ -148,8 +154,8 @@ def p_replaceall(p):
 
 
 def p_replaceall_error(p):
-    """str : LPAREN REPLACEALL str error CONST RPAREN
-           | LPAREN REPLACEALL str CONST error RPAREN
+    """str : LPAREN REPLACEALL str error const RPAREN
+           | LPAREN REPLACEALL str const error RPAREN
            | LPAREN REPLACEALL str error error RPAREN"""
     raise BadArgumentError('Second and third arguments of \'replace_all\' must be constants!\n')
 
@@ -181,11 +187,15 @@ def convert():
         raise GenericError('Parsing failed!')
     result, preds = Translate.translateToCNF(list(result))
 
-    with open(outfile.get(), 'w') as output_file:
-        pass
+    converter = Converter(result, preds)
 
-    print(result)
-    print(preds)
+    converter.codegen()
+
+    with open(outfile.get(), 'w') as output_file:
+        for i in converter.decls:
+            output_file.write(i)
+            output_file.write('\n')
+        output_file.write(converter.entry)
 
 
 if __name__ == '__main__':

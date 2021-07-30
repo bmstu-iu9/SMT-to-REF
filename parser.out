@@ -25,52 +25,54 @@ Rule 19    expr -> LPAREN NOT expr RPAREN
 Rule 20    exprs -> expr
 Rule 21    exprs -> exprs expr
 Rule 22    pred -> LPAREN EQUALS str str RPAREN
-Rule 23    pred -> LPAREN CONTAINS str CONST RPAREN
+Rule 23    pred -> LPAREN CONTAINS str const RPAREN
 Rule 24    pred -> LPAREN CONTAINS str error RPAREN
 Rule 25    str -> ID
-Rule 26    str -> CONST
+Rule 26    str -> const
 Rule 27    str -> LPAREN CONCAT strs RPAREN
-Rule 28    str -> LPAREN REPLACEALL str CONST CONST RPAREN
-Rule 29    str -> LPAREN REPLACEALL str error CONST RPAREN
-Rule 30    str -> LPAREN REPLACEALL str CONST error RPAREN
-Rule 31    str -> LPAREN REPLACEALL str error error RPAREN
-Rule 32    strs -> str
-Rule 33    strs -> strs str
-Rule 34    build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+Rule 28    const -> CONST
+Rule 29    str -> LPAREN REPLACEALL str const const RPAREN
+Rule 30    str -> LPAREN REPLACEALL str error const RPAREN
+Rule 31    str -> LPAREN REPLACEALL str const error RPAREN
+Rule 32    str -> LPAREN REPLACEALL str error error RPAREN
+Rule 33    strs -> str
+Rule 34    strs -> strs str
+Rule 35    build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
 
 Terminals, with rules where they appear
 
 AND                  : 17
 ASSERT               : 15
 BOOL                 : 7
-CHECKSAT             : 34
+CHECKSAT             : 35
 COLON                : 7
 CONCAT               : 27
-CONST                : 23 26 28 28 29 30
+CONST                : 28
 CONTAINS             : 23 24
 DECLAREFUN           : 12
 EQUALS               : 22
-GETMODEL             : 34
+GETMODEL             : 35
 ID                   : 12 25
-LPAREN               : 3 4 7 12 12 15 17 18 19 22 23 24 27 28 29 30 31 34 34
+LPAREN               : 3 4 7 12 12 15 17 18 19 22 23 24 27 29 30 31 32 35 35
 NOT                  : 19
 OR                   : 18
 PRODUCEMODELS        : 8
 QF_S                 : 4
 QF_SLIA              : 3
-REPLACEALL           : 28 29 30 31
-RPAREN               : 3 4 7 12 12 15 17 18 19 22 23 24 27 28 29 30 31 34 34
+REPLACEALL           : 29 30 31 32
+RPAREN               : 3 4 7 12 12 15 17 18 19 22 23 24 27 29 30 31 32 35 35
 SETLOGIC             : 3 4
 SETOPTION            : 7
 STRING               : 12
 STRINGSEXP           : 9
-error                : 24 29 30 31 31
+error                : 24 30 31 32 32
 
 Nonterminals, with rules where they appear
 
 assert               : 13 14
 asserts              : 1 2 14
 build                : 1 2
+const                : 23 26 29 29 30 31
 decl                 : 10 11
 decls                : 1 2 11
 expr                 : 15 19 20 21
@@ -81,8 +83,8 @@ optionname           : 7
 options              : 1 6
 pred                 : 16
 program              : 0
-str                  : 22 22 23 24 28 29 30 31 32 33
-strs                 : 27 33
+str                  : 22 22 23 24 29 30 31 32 33 34
+strs                 : 27 34
 
 Parsing method: LALR
 
@@ -219,7 +221,7 @@ state 12
 
     (2) program -> logic decls asserts . build
     (14) asserts -> asserts . assert
-    (34) build -> . LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+    (35) build -> . LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
     (15) assert -> . LPAREN ASSERT expr RPAREN
 
     LPAREN          shift and go to state 23
@@ -282,7 +284,7 @@ state 20
 
     (1) program -> logic options decls asserts . build
     (14) asserts -> asserts . assert
-    (34) build -> . LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+    (35) build -> . LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN
     (15) assert -> . LPAREN ASSERT expr RPAREN
 
     LPAREN          shift and go to state 23
@@ -306,7 +308,7 @@ state 22
 
 state 23
 
-    (34) build -> LPAREN . CHECKSAT RPAREN LPAREN GETMODEL RPAREN
+    (35) build -> LPAREN . CHECKSAT RPAREN LPAREN GETMODEL RPAREN
     (15) assert -> LPAREN . ASSERT expr RPAREN
 
     CHECKSAT        shift and go to state 30
@@ -321,7 +323,7 @@ state 24
     (18) expr -> . LPAREN OR exprs RPAREN
     (19) expr -> . LPAREN NOT expr RPAREN
     (22) pred -> . LPAREN EQUALS str str RPAREN
-    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+    (23) pred -> . LPAREN CONTAINS str const RPAREN
     (24) pred -> . LPAREN CONTAINS str error RPAREN
 
     LPAREN          shift and go to state 31
@@ -370,7 +372,7 @@ state 29
 
 state 30
 
-    (34) build -> LPAREN CHECKSAT . RPAREN LPAREN GETMODEL RPAREN
+    (35) build -> LPAREN CHECKSAT . RPAREN LPAREN GETMODEL RPAREN
 
     RPAREN          shift and go to state 38
 
@@ -381,7 +383,7 @@ state 31
     (18) expr -> LPAREN . OR exprs RPAREN
     (19) expr -> LPAREN . NOT expr RPAREN
     (22) pred -> LPAREN . EQUALS str str RPAREN
-    (23) pred -> LPAREN . CONTAINS str CONST RPAREN
+    (23) pred -> LPAREN . CONTAINS str const RPAREN
     (24) pred -> LPAREN . CONTAINS str error RPAREN
 
     AND             shift and go to state 39
@@ -436,7 +438,7 @@ state 37
 
 state 38
 
-    (34) build -> LPAREN CHECKSAT RPAREN . LPAREN GETMODEL RPAREN
+    (35) build -> LPAREN CHECKSAT RPAREN . LPAREN GETMODEL RPAREN
 
     LPAREN          shift and go to state 47
 
@@ -451,7 +453,7 @@ state 39
     (18) expr -> . LPAREN OR exprs RPAREN
     (19) expr -> . LPAREN NOT expr RPAREN
     (22) pred -> . LPAREN EQUALS str str RPAREN
-    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+    (23) pred -> . LPAREN CONTAINS str const RPAREN
     (24) pred -> . LPAREN CONTAINS str error RPAREN
 
     LPAREN          shift and go to state 31
@@ -470,7 +472,7 @@ state 40
     (18) expr -> . LPAREN OR exprs RPAREN
     (19) expr -> . LPAREN NOT expr RPAREN
     (22) pred -> . LPAREN EQUALS str str RPAREN
-    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+    (23) pred -> . LPAREN CONTAINS str const RPAREN
     (24) pred -> . LPAREN CONTAINS str error RPAREN
 
     LPAREN          shift and go to state 31
@@ -487,7 +489,7 @@ state 41
     (18) expr -> . LPAREN OR exprs RPAREN
     (19) expr -> . LPAREN NOT expr RPAREN
     (22) pred -> . LPAREN EQUALS str str RPAREN
-    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+    (23) pred -> . LPAREN CONTAINS str const RPAREN
     (24) pred -> . LPAREN CONTAINS str error RPAREN
 
     LPAREN          shift and go to state 31
@@ -499,36 +501,40 @@ state 42
 
     (22) pred -> LPAREN EQUALS . str str RPAREN
     (25) str -> . ID
-    (26) str -> . CONST
+    (26) str -> . const
     (27) str -> . LPAREN CONCAT strs RPAREN
-    (28) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
-    (29) str -> . LPAREN REPLACEALL str error CONST RPAREN
-    (30) str -> . LPAREN REPLACEALL str CONST error RPAREN
-    (31) str -> . LPAREN REPLACEALL str error error RPAREN
+    (29) str -> . LPAREN REPLACEALL str const const RPAREN
+    (30) str -> . LPAREN REPLACEALL str error const RPAREN
+    (31) str -> . LPAREN REPLACEALL str const error RPAREN
+    (32) str -> . LPAREN REPLACEALL str error error RPAREN
+    (28) const -> . CONST
 
     ID              shift and go to state 54
-    CONST           shift and go to state 55
     LPAREN          shift and go to state 52
+    CONST           shift and go to state 56
 
     str                            shift and go to state 53
+    const                          shift and go to state 55
 
 state 43
 
-    (23) pred -> LPAREN CONTAINS . str CONST RPAREN
+    (23) pred -> LPAREN CONTAINS . str const RPAREN
     (24) pred -> LPAREN CONTAINS . str error RPAREN
     (25) str -> . ID
-    (26) str -> . CONST
+    (26) str -> . const
     (27) str -> . LPAREN CONCAT strs RPAREN
-    (28) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
-    (29) str -> . LPAREN REPLACEALL str error CONST RPAREN
-    (30) str -> . LPAREN REPLACEALL str CONST error RPAREN
-    (31) str -> . LPAREN REPLACEALL str error error RPAREN
+    (29) str -> . LPAREN REPLACEALL str const const RPAREN
+    (30) str -> . LPAREN REPLACEALL str error const RPAREN
+    (31) str -> . LPAREN REPLACEALL str const error RPAREN
+    (32) str -> . LPAREN REPLACEALL str error error RPAREN
+    (28) const -> . CONST
 
     ID              shift and go to state 54
-    CONST           shift and go to state 55
     LPAREN          shift and go to state 52
+    CONST           shift and go to state 56
 
-    str                            shift and go to state 56
+    str                            shift and go to state 57
+    const                          shift and go to state 55
 
 state 44
 
@@ -541,21 +547,21 @@ state 45
 
     (7) option -> LPAREN SETOPTION COLON optionname BOOL . RPAREN
 
-    RPAREN          shift and go to state 57
+    RPAREN          shift and go to state 58
 
 
 state 46
 
     (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN . STRING RPAREN
 
-    STRING          shift and go to state 58
+    STRING          shift and go to state 59
 
 
 state 47
 
-    (34) build -> LPAREN CHECKSAT RPAREN LPAREN . GETMODEL RPAREN
+    (35) build -> LPAREN CHECKSAT RPAREN LPAREN . GETMODEL RPAREN
 
-    GETMODEL        shift and go to state 59
+    GETMODEL        shift and go to state 60
 
 
 state 48
@@ -567,13 +573,13 @@ state 48
     (18) expr -> . LPAREN OR exprs RPAREN
     (19) expr -> . LPAREN NOT expr RPAREN
     (22) pred -> . LPAREN EQUALS str str RPAREN
-    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+    (23) pred -> . LPAREN CONTAINS str const RPAREN
     (24) pred -> . LPAREN CONTAINS str error RPAREN
 
-    RPAREN          shift and go to state 60
+    RPAREN          shift and go to state 61
     LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 61
+    expr                           shift and go to state 62
     pred                           shift and go to state 33
 
 state 49
@@ -593,104 +599,119 @@ state 50
     (18) expr -> . LPAREN OR exprs RPAREN
     (19) expr -> . LPAREN NOT expr RPAREN
     (22) pred -> . LPAREN EQUALS str str RPAREN
-    (23) pred -> . LPAREN CONTAINS str CONST RPAREN
+    (23) pred -> . LPAREN CONTAINS str const RPAREN
     (24) pred -> . LPAREN CONTAINS str error RPAREN
 
-    RPAREN          shift and go to state 62
+    RPAREN          shift and go to state 63
     LPAREN          shift and go to state 31
 
-    expr                           shift and go to state 61
+    expr                           shift and go to state 62
     pred                           shift and go to state 33
 
 state 51
 
     (19) expr -> LPAREN NOT expr . RPAREN
 
-    RPAREN          shift and go to state 63
+    RPAREN          shift and go to state 64
 
 
 state 52
 
     (27) str -> LPAREN . CONCAT strs RPAREN
-    (28) str -> LPAREN . REPLACEALL str CONST CONST RPAREN
-    (29) str -> LPAREN . REPLACEALL str error CONST RPAREN
-    (30) str -> LPAREN . REPLACEALL str CONST error RPAREN
-    (31) str -> LPAREN . REPLACEALL str error error RPAREN
+    (29) str -> LPAREN . REPLACEALL str const const RPAREN
+    (30) str -> LPAREN . REPLACEALL str error const RPAREN
+    (31) str -> LPAREN . REPLACEALL str const error RPAREN
+    (32) str -> LPAREN . REPLACEALL str error error RPAREN
 
-    CONCAT          shift and go to state 64
-    REPLACEALL      shift and go to state 65
+    CONCAT          shift and go to state 65
+    REPLACEALL      shift and go to state 66
 
 
 state 53
 
     (22) pred -> LPAREN EQUALS str . str RPAREN
     (25) str -> . ID
-    (26) str -> . CONST
+    (26) str -> . const
     (27) str -> . LPAREN CONCAT strs RPAREN
-    (28) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
-    (29) str -> . LPAREN REPLACEALL str error CONST RPAREN
-    (30) str -> . LPAREN REPLACEALL str CONST error RPAREN
-    (31) str -> . LPAREN REPLACEALL str error error RPAREN
+    (29) str -> . LPAREN REPLACEALL str const const RPAREN
+    (30) str -> . LPAREN REPLACEALL str error const RPAREN
+    (31) str -> . LPAREN REPLACEALL str const error RPAREN
+    (32) str -> . LPAREN REPLACEALL str error error RPAREN
+    (28) const -> . CONST
 
     ID              shift and go to state 54
-    CONST           shift and go to state 55
     LPAREN          shift and go to state 52
+    CONST           shift and go to state 56
 
-    str                            shift and go to state 66
+    str                            shift and go to state 67
+    const                          shift and go to state 55
 
 state 54
 
     (25) str -> ID .
 
     ID              reduce using rule 25 (str -> ID .)
-    CONST           reduce using rule 25 (str -> ID .)
     LPAREN          reduce using rule 25 (str -> ID .)
+    CONST           reduce using rule 25 (str -> ID .)
     error           reduce using rule 25 (str -> ID .)
     RPAREN          reduce using rule 25 (str -> ID .)
 
 
 state 55
 
-    (26) str -> CONST .
+    (26) str -> const .
 
-    ID              reduce using rule 26 (str -> CONST .)
-    CONST           reduce using rule 26 (str -> CONST .)
-    LPAREN          reduce using rule 26 (str -> CONST .)
-    error           reduce using rule 26 (str -> CONST .)
-    RPAREN          reduce using rule 26 (str -> CONST .)
+    ID              reduce using rule 26 (str -> const .)
+    LPAREN          reduce using rule 26 (str -> const .)
+    CONST           reduce using rule 26 (str -> const .)
+    error           reduce using rule 26 (str -> const .)
+    RPAREN          reduce using rule 26 (str -> const .)
 
 
 state 56
 
-    (23) pred -> LPAREN CONTAINS str . CONST RPAREN
-    (24) pred -> LPAREN CONTAINS str . error RPAREN
+    (28) const -> CONST .
 
-    CONST           shift and go to state 67
-    error           shift and go to state 68
+    ID              reduce using rule 28 (const -> CONST .)
+    LPAREN          reduce using rule 28 (const -> CONST .)
+    CONST           reduce using rule 28 (const -> CONST .)
+    error           reduce using rule 28 (const -> CONST .)
+    RPAREN          reduce using rule 28 (const -> CONST .)
 
 
 state 57
+
+    (23) pred -> LPAREN CONTAINS str . const RPAREN
+    (24) pred -> LPAREN CONTAINS str . error RPAREN
+    (28) const -> . CONST
+
+    error           shift and go to state 69
+    CONST           shift and go to state 56
+
+    const                          shift and go to state 68
+
+state 58
 
     (7) option -> LPAREN SETOPTION COLON optionname BOOL RPAREN .
 
     LPAREN          reduce using rule 7 (option -> LPAREN SETOPTION COLON optionname BOOL RPAREN .)
 
 
-state 58
-
-    (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING . RPAREN
-
-    RPAREN          shift and go to state 69
-
-
 state 59
 
-    (34) build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL . RPAREN
+    (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING . RPAREN
 
     RPAREN          shift and go to state 70
 
 
 state 60
+
+    (35) build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL . RPAREN
+
+    RPAREN          shift and go to state 71
+
+
+state 61
 
     (17) expr -> LPAREN AND exprs RPAREN .
 
@@ -698,7 +719,7 @@ state 60
     LPAREN          reduce using rule 17 (expr -> LPAREN AND exprs RPAREN .)
 
 
-state 61
+state 62
 
     (21) exprs -> exprs expr .
 
@@ -706,7 +727,7 @@ state 61
     LPAREN          reduce using rule 21 (exprs -> exprs expr .)
 
 
-state 62
+state 63
 
     (18) expr -> LPAREN OR exprs RPAREN .
 
@@ -714,7 +735,7 @@ state 62
     LPAREN          reduce using rule 18 (expr -> LPAREN OR exprs RPAREN .)
 
 
-state 63
+state 64
 
     (19) expr -> LPAREN NOT expr RPAREN .
 
@@ -722,122 +743,130 @@ state 63
     LPAREN          reduce using rule 19 (expr -> LPAREN NOT expr RPAREN .)
 
 
-state 64
-
-    (27) str -> LPAREN CONCAT . strs RPAREN
-    (32) strs -> . str
-    (33) strs -> . strs str
-    (25) str -> . ID
-    (26) str -> . CONST
-    (27) str -> . LPAREN CONCAT strs RPAREN
-    (28) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
-    (29) str -> . LPAREN REPLACEALL str error CONST RPAREN
-    (30) str -> . LPAREN REPLACEALL str CONST error RPAREN
-    (31) str -> . LPAREN REPLACEALL str error error RPAREN
-
-    ID              shift and go to state 54
-    CONST           shift and go to state 55
-    LPAREN          shift and go to state 52
-
-    strs                           shift and go to state 71
-    str                            shift and go to state 72
-
 state 65
 
-    (28) str -> LPAREN REPLACEALL . str CONST CONST RPAREN
-    (29) str -> LPAREN REPLACEALL . str error CONST RPAREN
-    (30) str -> LPAREN REPLACEALL . str CONST error RPAREN
-    (31) str -> LPAREN REPLACEALL . str error error RPAREN
+    (27) str -> LPAREN CONCAT . strs RPAREN
+    (33) strs -> . str
+    (34) strs -> . strs str
     (25) str -> . ID
-    (26) str -> . CONST
+    (26) str -> . const
     (27) str -> . LPAREN CONCAT strs RPAREN
-    (28) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
-    (29) str -> . LPAREN REPLACEALL str error CONST RPAREN
-    (30) str -> . LPAREN REPLACEALL str CONST error RPAREN
-    (31) str -> . LPAREN REPLACEALL str error error RPAREN
+    (29) str -> . LPAREN REPLACEALL str const const RPAREN
+    (30) str -> . LPAREN REPLACEALL str error const RPAREN
+    (31) str -> . LPAREN REPLACEALL str const error RPAREN
+    (32) str -> . LPAREN REPLACEALL str error error RPAREN
+    (28) const -> . CONST
 
     ID              shift and go to state 54
-    CONST           shift and go to state 55
     LPAREN          shift and go to state 52
+    CONST           shift and go to state 56
 
+    strs                           shift and go to state 72
     str                            shift and go to state 73
+    const                          shift and go to state 55
 
 state 66
 
-    (22) pred -> LPAREN EQUALS str str . RPAREN
+    (29) str -> LPAREN REPLACEALL . str const const RPAREN
+    (30) str -> LPAREN REPLACEALL . str error const RPAREN
+    (31) str -> LPAREN REPLACEALL . str const error RPAREN
+    (32) str -> LPAREN REPLACEALL . str error error RPAREN
+    (25) str -> . ID
+    (26) str -> . const
+    (27) str -> . LPAREN CONCAT strs RPAREN
+    (29) str -> . LPAREN REPLACEALL str const const RPAREN
+    (30) str -> . LPAREN REPLACEALL str error const RPAREN
+    (31) str -> . LPAREN REPLACEALL str const error RPAREN
+    (32) str -> . LPAREN REPLACEALL str error error RPAREN
+    (28) const -> . CONST
 
-    RPAREN          shift and go to state 74
+    ID              shift and go to state 54
+    LPAREN          shift and go to state 52
+    CONST           shift and go to state 56
 
+    str                            shift and go to state 74
+    const                          shift and go to state 55
 
 state 67
 
-    (23) pred -> LPAREN CONTAINS str CONST . RPAREN
+    (22) pred -> LPAREN EQUALS str str . RPAREN
 
     RPAREN          shift and go to state 75
 
 
 state 68
 
-    (24) pred -> LPAREN CONTAINS str error . RPAREN
+    (23) pred -> LPAREN CONTAINS str const . RPAREN
 
     RPAREN          shift and go to state 76
 
 
 state 69
 
+    (24) pred -> LPAREN CONTAINS str error . RPAREN
+
+    RPAREN          shift and go to state 77
+
+
+state 70
+
     (12) decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN .
 
     LPAREN          reduce using rule 12 (decl -> LPAREN DECLAREFUN ID LPAREN RPAREN STRING RPAREN .)
 
 
-state 70
-
-    (34) build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN .
-
-    $end            reduce using rule 34 (build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN .)
-
-
 state 71
 
-    (27) str -> LPAREN CONCAT strs . RPAREN
-    (33) strs -> strs . str
-    (25) str -> . ID
-    (26) str -> . CONST
-    (27) str -> . LPAREN CONCAT strs RPAREN
-    (28) str -> . LPAREN REPLACEALL str CONST CONST RPAREN
-    (29) str -> . LPAREN REPLACEALL str error CONST RPAREN
-    (30) str -> . LPAREN REPLACEALL str CONST error RPAREN
-    (31) str -> . LPAREN REPLACEALL str error error RPAREN
+    (35) build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN .
 
-    RPAREN          shift and go to state 77
-    ID              shift and go to state 54
-    CONST           shift and go to state 55
-    LPAREN          shift and go to state 52
+    $end            reduce using rule 35 (build -> LPAREN CHECKSAT RPAREN LPAREN GETMODEL RPAREN .)
 
-    str                            shift and go to state 78
 
 state 72
 
-    (32) strs -> str .
+    (27) str -> LPAREN CONCAT strs . RPAREN
+    (34) strs -> strs . str
+    (25) str -> . ID
+    (26) str -> . const
+    (27) str -> . LPAREN CONCAT strs RPAREN
+    (29) str -> . LPAREN REPLACEALL str const const RPAREN
+    (30) str -> . LPAREN REPLACEALL str error const RPAREN
+    (31) str -> . LPAREN REPLACEALL str const error RPAREN
+    (32) str -> . LPAREN REPLACEALL str error error RPAREN
+    (28) const -> . CONST
 
-    RPAREN          reduce using rule 32 (strs -> str .)
-    ID              reduce using rule 32 (strs -> str .)
-    CONST           reduce using rule 32 (strs -> str .)
-    LPAREN          reduce using rule 32 (strs -> str .)
+    RPAREN          shift and go to state 78
+    ID              shift and go to state 54
+    LPAREN          shift and go to state 52
+    CONST           shift and go to state 56
 
+    str                            shift and go to state 79
+    const                          shift and go to state 55
 
 state 73
 
-    (28) str -> LPAREN REPLACEALL str . CONST CONST RPAREN
-    (29) str -> LPAREN REPLACEALL str . error CONST RPAREN
-    (30) str -> LPAREN REPLACEALL str . CONST error RPAREN
-    (31) str -> LPAREN REPLACEALL str . error error RPAREN
+    (33) strs -> str .
 
-    CONST           shift and go to state 79
-    error           shift and go to state 80
+    RPAREN          reduce using rule 33 (strs -> str .)
+    ID              reduce using rule 33 (strs -> str .)
+    LPAREN          reduce using rule 33 (strs -> str .)
+    CONST           reduce using rule 33 (strs -> str .)
 
 
 state 74
+
+    (29) str -> LPAREN REPLACEALL str . const const RPAREN
+    (30) str -> LPAREN REPLACEALL str . error const RPAREN
+    (31) str -> LPAREN REPLACEALL str . const error RPAREN
+    (32) str -> LPAREN REPLACEALL str . error error RPAREN
+    (28) const -> . CONST
+
+    error           shift and go to state 81
+    CONST           shift and go to state 56
+
+    const                          shift and go to state 80
+
+state 75
 
     (22) pred -> LPAREN EQUALS str str RPAREN .
 
@@ -845,15 +874,15 @@ state 74
     LPAREN          reduce using rule 22 (pred -> LPAREN EQUALS str str RPAREN .)
 
 
-state 75
-
-    (23) pred -> LPAREN CONTAINS str CONST RPAREN .
-
-    RPAREN          reduce using rule 23 (pred -> LPAREN CONTAINS str CONST RPAREN .)
-    LPAREN          reduce using rule 23 (pred -> LPAREN CONTAINS str CONST RPAREN .)
-
-
 state 76
+
+    (23) pred -> LPAREN CONTAINS str const RPAREN .
+
+    RPAREN          reduce using rule 23 (pred -> LPAREN CONTAINS str const RPAREN .)
+    LPAREN          reduce using rule 23 (pred -> LPAREN CONTAINS str const RPAREN .)
+
+
+state 77
 
     (24) pred -> LPAREN CONTAINS str error RPAREN .
 
@@ -861,113 +890,117 @@ state 76
     LPAREN          reduce using rule 24 (pred -> LPAREN CONTAINS str error RPAREN .)
 
 
-state 77
+state 78
 
     (27) str -> LPAREN CONCAT strs RPAREN .
 
     ID              reduce using rule 27 (str -> LPAREN CONCAT strs RPAREN .)
-    CONST           reduce using rule 27 (str -> LPAREN CONCAT strs RPAREN .)
     LPAREN          reduce using rule 27 (str -> LPAREN CONCAT strs RPAREN .)
+    CONST           reduce using rule 27 (str -> LPAREN CONCAT strs RPAREN .)
     error           reduce using rule 27 (str -> LPAREN CONCAT strs RPAREN .)
     RPAREN          reduce using rule 27 (str -> LPAREN CONCAT strs RPAREN .)
 
 
-state 78
-
-    (33) strs -> strs str .
-
-    RPAREN          reduce using rule 33 (strs -> strs str .)
-    ID              reduce using rule 33 (strs -> strs str .)
-    CONST           reduce using rule 33 (strs -> strs str .)
-    LPAREN          reduce using rule 33 (strs -> strs str .)
-
-
 state 79
 
-    (28) str -> LPAREN REPLACEALL str CONST . CONST RPAREN
-    (30) str -> LPAREN REPLACEALL str CONST . error RPAREN
+    (34) strs -> strs str .
 
-    CONST           shift and go to state 81
-    error           shift and go to state 82
+    RPAREN          reduce using rule 34 (strs -> strs str .)
+    ID              reduce using rule 34 (strs -> strs str .)
+    LPAREN          reduce using rule 34 (strs -> strs str .)
+    CONST           reduce using rule 34 (strs -> strs str .)
 
 
 state 80
 
-    (29) str -> LPAREN REPLACEALL str error . CONST RPAREN
-    (31) str -> LPAREN REPLACEALL str error . error RPAREN
+    (29) str -> LPAREN REPLACEALL str const . const RPAREN
+    (31) str -> LPAREN REPLACEALL str const . error RPAREN
+    (28) const -> . CONST
 
-    CONST           shift and go to state 84
     error           shift and go to state 83
+    CONST           shift and go to state 56
 
+    const                          shift and go to state 82
 
 state 81
 
-    (28) str -> LPAREN REPLACEALL str CONST CONST . RPAREN
+    (30) str -> LPAREN REPLACEALL str error . const RPAREN
+    (32) str -> LPAREN REPLACEALL str error . error RPAREN
+    (28) const -> . CONST
 
-    RPAREN          shift and go to state 85
+    error           shift and go to state 84
+    CONST           shift and go to state 56
 
+    const                          shift and go to state 85
 
 state 82
 
-    (30) str -> LPAREN REPLACEALL str CONST error . RPAREN
+    (29) str -> LPAREN REPLACEALL str const const . RPAREN
 
     RPAREN          shift and go to state 86
 
 
 state 83
 
-    (31) str -> LPAREN REPLACEALL str error error . RPAREN
+    (31) str -> LPAREN REPLACEALL str const error . RPAREN
 
     RPAREN          shift and go to state 87
 
 
 state 84
 
-    (29) str -> LPAREN REPLACEALL str error CONST . RPAREN
+    (32) str -> LPAREN REPLACEALL str error error . RPAREN
 
     RPAREN          shift and go to state 88
 
 
 state 85
 
-    (28) str -> LPAREN REPLACEALL str CONST CONST RPAREN .
+    (30) str -> LPAREN REPLACEALL str error const . RPAREN
 
-    ID              reduce using rule 28 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
-    CONST           reduce using rule 28 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
-    LPAREN          reduce using rule 28 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
-    error           reduce using rule 28 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
-    RPAREN          reduce using rule 28 (str -> LPAREN REPLACEALL str CONST CONST RPAREN .)
+    RPAREN          shift and go to state 89
 
 
 state 86
 
-    (30) str -> LPAREN REPLACEALL str CONST error RPAREN .
+    (29) str -> LPAREN REPLACEALL str const const RPAREN .
 
-    ID              reduce using rule 30 (str -> LPAREN REPLACEALL str CONST error RPAREN .)
-    CONST           reduce using rule 30 (str -> LPAREN REPLACEALL str CONST error RPAREN .)
-    LPAREN          reduce using rule 30 (str -> LPAREN REPLACEALL str CONST error RPAREN .)
-    error           reduce using rule 30 (str -> LPAREN REPLACEALL str CONST error RPAREN .)
-    RPAREN          reduce using rule 30 (str -> LPAREN REPLACEALL str CONST error RPAREN .)
+    ID              reduce using rule 29 (str -> LPAREN REPLACEALL str const const RPAREN .)
+    LPAREN          reduce using rule 29 (str -> LPAREN REPLACEALL str const const RPAREN .)
+    CONST           reduce using rule 29 (str -> LPAREN REPLACEALL str const const RPAREN .)
+    error           reduce using rule 29 (str -> LPAREN REPLACEALL str const const RPAREN .)
+    RPAREN          reduce using rule 29 (str -> LPAREN REPLACEALL str const const RPAREN .)
 
 
 state 87
 
-    (31) str -> LPAREN REPLACEALL str error error RPAREN .
+    (31) str -> LPAREN REPLACEALL str const error RPAREN .
 
-    ID              reduce using rule 31 (str -> LPAREN REPLACEALL str error error RPAREN .)
-    CONST           reduce using rule 31 (str -> LPAREN REPLACEALL str error error RPAREN .)
-    LPAREN          reduce using rule 31 (str -> LPAREN REPLACEALL str error error RPAREN .)
-    error           reduce using rule 31 (str -> LPAREN REPLACEALL str error error RPAREN .)
-    RPAREN          reduce using rule 31 (str -> LPAREN REPLACEALL str error error RPAREN .)
+    ID              reduce using rule 31 (str -> LPAREN REPLACEALL str const error RPAREN .)
+    LPAREN          reduce using rule 31 (str -> LPAREN REPLACEALL str const error RPAREN .)
+    CONST           reduce using rule 31 (str -> LPAREN REPLACEALL str const error RPAREN .)
+    error           reduce using rule 31 (str -> LPAREN REPLACEALL str const error RPAREN .)
+    RPAREN          reduce using rule 31 (str -> LPAREN REPLACEALL str const error RPAREN .)
 
 
 state 88
 
-    (29) str -> LPAREN REPLACEALL str error CONST RPAREN .
+    (32) str -> LPAREN REPLACEALL str error error RPAREN .
 
-    ID              reduce using rule 29 (str -> LPAREN REPLACEALL str error CONST RPAREN .)
-    CONST           reduce using rule 29 (str -> LPAREN REPLACEALL str error CONST RPAREN .)
-    LPAREN          reduce using rule 29 (str -> LPAREN REPLACEALL str error CONST RPAREN .)
-    error           reduce using rule 29 (str -> LPAREN REPLACEALL str error CONST RPAREN .)
-    RPAREN          reduce using rule 29 (str -> LPAREN REPLACEALL str error CONST RPAREN .)
+    ID              reduce using rule 32 (str -> LPAREN REPLACEALL str error error RPAREN .)
+    LPAREN          reduce using rule 32 (str -> LPAREN REPLACEALL str error error RPAREN .)
+    CONST           reduce using rule 32 (str -> LPAREN REPLACEALL str error error RPAREN .)
+    error           reduce using rule 32 (str -> LPAREN REPLACEALL str error error RPAREN .)
+    RPAREN          reduce using rule 32 (str -> LPAREN REPLACEALL str error error RPAREN .)
+
+
+state 89
+
+    (30) str -> LPAREN REPLACEALL str error const RPAREN .
+
+    ID              reduce using rule 30 (str -> LPAREN REPLACEALL str error const RPAREN .)
+    LPAREN          reduce using rule 30 (str -> LPAREN REPLACEALL str error const RPAREN .)
+    CONST           reduce using rule 30 (str -> LPAREN REPLACEALL str error const RPAREN .)
+    error           reduce using rule 30 (str -> LPAREN REPLACEALL str error const RPAREN .)
+    RPAREN          reduce using rule 30 (str -> LPAREN REPLACEALL str error const RPAREN .)
 
