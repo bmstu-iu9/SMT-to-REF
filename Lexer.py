@@ -115,7 +115,7 @@ def t_ID(t):
 
 
 def t_CONST(t):
-    r'"[a-zA-Z_0-9]*"'
+    r'"[^"]*"'
     t.value = t.value[1:-1]
     return t
 

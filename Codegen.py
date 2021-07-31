@@ -1,4 +1,9 @@
+from re import match
+
+
 class Converter:
+    regex = '[a-zA-Z0-9]'
+
     def __init__(self, cnf, preds):
         self.cnf = cnf
         self.preds = dict()
@@ -16,6 +21,10 @@ class Converter:
         self.sent = ''
         self.entry = ''
 
+    @staticmethod
+    def screen_const_for_name(const):
+        return ''.join([i if match(Converter.regex, i) else '_{}'.format(ord(i)) for i in const[1:-1]])
+
     def convert_pred(self, literal):
         if literal[1] == '=':
             self.decls.add('Equal {\n'
@@ -25,11 +34,12 @@ class Converter:
             return '<Equal ({}) ({})>'.format(self.convert(literal[2]), self.convert(literal[3]))
         if literal[1] == 'str.contains':
             const = self.convert(literal[3])
-            self.decls.add('Infix_' + const[1:-1] + ' {\n'
+            name_const = Converter.screen_const_for_name(const)
+            self.decls.add('Infix__' + name_const + ' {\n'
                            '    e.1 ' + const + ' e.2 = True;\n'
                            '    e.Z = False;\n'
                            '}\n')
-            return '<Infix_{} {}>'.format(const[1:-1], self.convert(literal[2]))
+            return '<Infix__{} {}>'.format(name_const, self.convert(literal[2]))
 
     def convert_not_pred(self, literal):
         if literal[1] == '=':
@@ -40,15 +50,16 @@ class Converter:
             return '<Inequal ({}) ({})>'.format(self.convert(literal[2]), self.convert(literal[3]))
         if literal[1] == 'str.contains':
             const = self.convert(literal[3])
-            self.decls.add('No_' + const[1:-1] + ' {\n'
+            name_const = Converter.screen_const_for_name(const)
+            self.decls.add('No__' + name_const + ' {\n'
                            '    e.1 ' + const + ' e.2 = False;\n'
                            '    e.Z = True;\n'
                            '}\n')
-            return '<No_{} {}>'.format(const[1:-1], self.convert(literal[2]))
+            return '<No__{} {}>'.format(name_const, self.convert(literal[2]))
 
     def convert(self, literal):
         if literal[0] == 'const':
-            return '\'' + literal[1].replace('\'', '\\\'').replace('\\', '\\\\') + '\''
+            return '\'' + literal[1].replace('\\', '\\\\').replace('\'', '\\\'') + '\''
         if literal[0] == 'strs':
             return self.convert(literal[1]) + (' ' + self.convert(literal[2]) if len(literal) == 3 else '')
         if literal[0] == 'str':
@@ -58,13 +69,15 @@ class Converter:
                 if literal[2] == 'str.replace_all':
                     const1 = self.convert(literal[4])
                     const2 = self.convert(literal[5])
-                    self.decls.add('Repl_' + const1[1:-1] + '_' + const2[1:-1] + ' {\n'
-                                   '    e.1 ' + const1 + ' e.2 = e.1 ' + const2 + ' <Repl_' + const1[1:-1] + '_' + const2[1:-1] + ' e.2>;\n'
+                    name_const1 = Converter.screen_const_for_name(const1)
+                    name_const2 = Converter.screen_const_for_name(const2)
+                    self.decls.add('Repl__' + name_const1 + '__' + name_const2 + ' {\n'
+                                   '    e.1 ' + const1 + ' e.2 = e.1 ' + const2 + ' <Repl__' + name_const1 + '__' + name_const2 + ' e.2>;\n'
                                    '    e.Z = e.Z;\n'
                                    '}\n')
-                    return '<Repl_' + const1[1:-1] + '_' + const2[1:-1] + ' ' + self.convert(literal[3]) + '>'
+                    return '<Repl__' + name_const1 + '__' + name_const2 + ' ' + self.convert(literal[3]) + '>'
             if type(literal[1]) is str:
-                return 'e.' + literal[1].replace('\'', '\\\'').replace('\\', '\\\\')
+                return 'e.' + literal[1].replace('\\', '\\\\').replace('\'', '\\\'')
             if type(literal[1]) is tuple:
                 return self.convert(literal[1])
 
