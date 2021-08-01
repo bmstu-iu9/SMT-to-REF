@@ -25,6 +25,10 @@ class Converter:
     def screen_const_for_name(const):
         return ''.join([i if match(Converter.regex, i) else '_{}'.format(ord(i)) for i in const[1:-1]])
 
+    @staticmethod
+    def screen_id(id_):
+        return ''.join([i if match(Converter.regex, i) else '_{}'.format(ord(i)) for i in id_])
+
     def convert_pred(self, literal):
         if literal[1] == '=':
             self.decls.add('Equal {\n'
@@ -77,7 +81,7 @@ class Converter:
                                    '}\n')
                     return '<Repl__' + name_const1 + '__' + name_const2 + ' ' + self.convert(literal[3]) + '>'
             if type(literal[1]) is str:
-                return 'e.' + literal[1].replace('\\', '\\\\').replace('\'', '\\\'')
+                return 'e.' + Converter.screen_id(literal[1].replace('\\', '\\\\').replace('\'', '\\\''))
             if type(literal[1]) is tuple:
                 return self.convert(literal[1])
 
@@ -100,9 +104,9 @@ class Converter:
         decls = self.cnf[3] if len(self.cnf) == 6 else self.cnf[2]
         es = ''
         while len(decls) == 3:
-            es += '(e.{}) '.format(decls[2][3])
+            es += '(e.{}) '.format(Converter.screen_id(decls[2][3]))
             decls = decls[1]
-        es += '(e.{})'.format(decls[1][3])
+        es += '(e.{})'.format(Converter.screen_id(decls[1][3]))
 
         asserts = self.cnf[4] if len(self.cnf) == 6 else self.cnf[3]
 
