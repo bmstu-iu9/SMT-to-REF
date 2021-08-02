@@ -177,6 +177,7 @@ def collapse_asserts(tree):
         while len(asserts_node) == 3:
             expr_ = asserts_node[2][3]
             exprs = ('exprs', exprs, expr_)
+            asserts_node = asserts_node[1]
         expr_ = asserts_node[1][3]
         exprs = ('exprs', exprs, expr_)
         new_node = ('asserts', ('assert', '(', 'assert', ('expr', '(', 'and', exprs)))
