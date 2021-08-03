@@ -29,17 +29,90 @@ def throwNot(data):
 
      return data
 
+def EqualExprs(exp1,exp2):
+    if (exp1[1][0] == "pred" and exp2[1][0] == "pred"):
+        if (exp1[1] == exp2[1]):
+            return True
+        else:
+            return False
+    else:
+        if (len(exp1) == len(exp2) and exp1[2] == exp2[2]):
+            list1 = RecToList(exp1[3],list())
+            list2 = RecToList(exp2[3],list())
+            if (len(list1) != len(list2)):
+                return False
+            else:
+                cheak =  list()
+                cheak2 = list()
+                for i in range(0,len(list1)):
+                    cheak.append(False)
+                    cheak2.append(True)
+                for i in range(0,len(list1)):
+                    expr1 = list1[i]
+                    for j in range(0, len(list2)):
+                        expr2 = list2[j]
+                        if (EqualExprs(expr1,expr2) and cheak2[j]):
+                            cheak[i] = True
+                            cheak2[j] = False
+                            continue
+                flag = True
+                for f in cheak:
+                    if (not f):
+                        flag = False
+                if (flag):
+                    return True
+                else:
+                    return False
+        else:
+            return False
+
+def RecToList(data,list):
+    if (len(data) > 2):
+        list.append(data[2])
+        list = RecToList(data[1],list)
+        return list
+    else:
+        list.append(data[1])
+        return list
+
+def ListToRec(lis,data,pos):
+    data.append("exprs")
+    data.append(lis[pos])
+    pos = pos + 1
+    if (pos != len(lis)):
+        data.insert(1,ListToRec(lis,list(),pos))
+    return data
+
+
+def isPredEq(data, preds):
+    for i in range(0,len(preds)):
+        p = preds[i]
+        if (data[2] == "="):
+            if (data[2] == p[2] and ((data[3] == p[3] and data[4] == p[4]) or (data[3] == p[4] and data[4] == p[3]))):
+                return True,i
+        else:
+            if (data[2] ==p[2] and data[3] == p[3] and data[4] == p[4]):
+                return True, i
+    return False,-1
 
 def predCreate(data,preds):
-    if (data[2] == "str.contains"):
-        preds.append(("p" + str(len(preds)),(data[3]),data[2],data[3],data[4]))
+    flag,pos = isPredEq(data,preds)
+    if (not flag):
+        if (data[2] == "str.contains"):
+            preds.append(("p" + str(len(preds)),(data[3]),data[2],data[3],data[4]))
+        else:
+            preds.append(("p" + str(len(preds)),(data[3],data[4]),data[2], data[3], data[4]))
+        del data[2]
+        del data[2]
+        del data[2]
+        data.insert(2,"p" + str(len(preds)-1))
+        return data,preds
     else:
-        preds.append(("p" + str(len(preds)),(data[3],data[4]),data[2], data[3], data[4]))
-    del data[2]
-    del data[2]
-    del data[2]
-    data.insert(2,"p" + str(len(preds)-1))
-    return data,preds
+        del data[2]
+        del data[2]
+        del data[2]
+        data.insert(2, "p" + str(pos))
+        return data,preds
 
 
 def createPredAndDelNot(data, preds):
@@ -97,21 +170,24 @@ def cheakList(mass,choiseList,index):
     return cheak, choiseList
 
 
-def getFromDistrMass(distr_mass, pos):
-   pass
-
 
 def packFromChoiseList(i,pack, distr_mass, choiseList):
     lis = list(pack)
     if (len(pack) > 2):
         pack[1] = packFromChoiseList(i,list(pack[1]),distr_mass,choiseList)
     else:
-        pack.insert(1,list())
-        pack[1] = list(pack[1])
-        pack[1].append("exprs")
-        pack[1].append(distr_mass[i+1][choiseList[i]])
-        if (i+1 < len(choiseList)):
-            pack[1]= packFromChoiseList(i+1,list(pack[1]),distr_mass,choiseList)
+        if (len(pack) != 0):
+            pack.insert(1,list())
+            pack[1] = list(pack[1])
+            pack[1].append("exprs")
+            pack[1].append(distr_mass[i+1][choiseList[i]])
+            if (i+1 < len(choiseList)):
+                pack[1]= packFromChoiseList(i+1,list(pack[1]),distr_mass,choiseList)
+        else:
+            pack.append("exprs")
+            pack.append(distr_mass[i + 1][choiseList[i]])
+            if (i + 1 < len(choiseList)):
+                pack = packFromChoiseList(i + 1, list(pack), distr_mass, choiseList)
     return pack
 
 
@@ -120,7 +196,7 @@ def reloadMass(distr_mass,lis):
         lis.append(distr_mass[2])
         lis.append(reloadMass(distr_mass[1],list()))
     else:
-        lis.append(distr_mass[1])
+        return distr_mass[1]
     return lis
 
 
@@ -147,7 +223,6 @@ def app(data,distr_mass):
         pack = packSimple(pack,0,list(distr_mass[0]))
     else:
         pack = list()
-        pack.append(list())
     choiseList = list()
     for i in range(1,len(distr_mass)):
         choiseList.append(0)
@@ -175,6 +250,155 @@ def distrAppication(data):
         return data
 
 
+def DelSameElemsForDis(data):
+    if (len(data) == 2 and data[0] != "expr"):
+        data[1] = DelSameElemsForDis(data[1])
+    elif (len(data) == 3):
+        data[2] = DelSameElemsForDis(data[2])
+        data[1] = DelSameElemsForDis(data[1])
+    else:
+        if (len(data) != 2 ):
+            res = list()
+            if (data[2] == "or"):
+                list1 = RecToList(data[3],list())
+                list2 = list(list1)
+                for i in range(0,len(list1)):
+                    l = list1[i]
+                    flag = True
+                    for j in range(0,len(res)):
+                        l2 = res[j]
+                        if (EqualExprs(l,l2)):
+                            flag = False
+                    if (flag):
+                        res.append(l)
+                res = ListToRec(res,list(),0)
+                data[3] = res
+                if (len(data[3]) == 2):
+                    data = data[3]
+                    data = DelSameElemsForDis(data)
+                else:
+                    data[3] = DelSameElemsForDis(data[3])
+            else:
+                data[3] = DelSameElemsForDis(data[3])
+    return data
+
+
+
+
+
+def DelSameElemsRecForDis(data):
+    if (len(data) > 2):
+        data[2] = DelSameElemsForDis(data[2])
+        data[1][3] = DelSameElemsRecForDis(data[1][3])
+    else:
+        data[1][3] = DelSameElemsForDis(data[1][3])
+    return data
+
+
+def OposExprs(l, l2):
+    if (len(l) > 3 and l[2] == "not"):
+        return EqualExprs(l[3],l2)
+    elif(len(l2) > 3 and l2[2] == "not"):
+        return EqualExprs(l2[3],l)
+    else:
+        return False
+
+
+def DelOposLitForDis(data):
+    if (len(data) == 2 and data[0] != "expr"):
+        data[1] = DelOposLitForDis(data[1])
+        if (data[1] == list()):
+            return list()
+    elif (len(data) == 3):
+        data[2] = DelOposLitForDis(data[2])
+        if (data[2] == list()):
+            data = data[1]
+        data[1] = DelOposLitForDis(data[1])
+        if (data[1] == list()):
+            del data[1]
+    else:
+        if (len(data) != 2 ):
+            res = list()
+            if (data[2] == "or"):
+                list1 = RecToList(data[3],list())
+                list2 = list(list1)
+                for i in range(0,len(list1)):
+                    l = list1[i]
+                    flag = True
+                    for j in range(0,len(list2)):
+                        l2 = list2[j]
+                        if (i !=j and OposExprs(l,l2)):
+                            flag = False
+                    if (flag):
+                        res.append(l)
+                if (res == list()):
+                    return list()
+                else:
+                    res = ListToRec(res,list(),0)
+                    data[3] = res
+                    if (len(data[3]) == 2):
+                        data = data[3]
+                        data = DelOposLitForDis(data)
+                    else:
+                        data[3] = DelOposLitForDis(data[3])
+            else:
+                data[3] = DelOposLitForDis(data[3])
+    return data
+
+
+def DelOposLitRecForDis(data):
+    if (len(data) > 2):
+        data[2] = DelOposLitForDis(data[2])
+        data[1][3] = DelOposLitRecForDis(data[1][3])
+    else:
+        data[1][3] = DelOposLitForDis(data[1][3])
+    return data
+
+
+def CheakAssoc(data):
+    if (len(data) == 2 and data[0] != "expr"):
+        data[1] =CheakAssoc(data[1])
+    elif (len(data) == 3):
+        data[2] = CheakAssoc(data[2])
+        data[1] = CheakAssoc(data[1])
+    else:
+        if (len(data) != 2):
+            res = list()
+            if (data[2] == "or"):
+                list1 = RecToList(data[3],list())
+                for i in range(0,len(list1)):
+                    l = list1[i]
+                    if (len(l) > 3 and l[2] == "or"):
+                        res.append(RecToList(l[3]))
+                res.extend(list1)
+                res = ListToRec(res,list(),0)
+                data[3] = res
+                data[3] = CheakAssoc(data[3])
+            elif(data[2] == "and"):
+                list1 = RecToList(data[3], list())
+                for i in range(0, len(list1)):
+                    l = list1[i]
+                    if (len(l) > 3 and l[2] == "and"):
+                        res.extend(RecToList(l[3],list()))
+                    else:
+                        res.append(l)
+                res = ListToRec(res, list(), 0)
+                data[3] = res
+                data[3] = CheakAssoc(data[3])
+            else:
+                data[3] = CheakAssoc(data[3])
+    return data
+
+
+def CheakAssocRec(data):
+    if (len(data) > 2):
+        data[2] = CheakAssoc(data[2])
+        data[1][3] = CheakAssocRec(data[1][3])
+    else:
+        data[1][3] = CheakAssoc(data[1][3])
+    return data
+
+
 def translateToCNF(data):
     preds = []
     for i in range(1,len(data)):
@@ -182,5 +406,8 @@ def translateToCNF(data):
         if t[0] == "asserts":
             data[i],preds = createPredAndDelNot(list(t), list(preds))
             data[i] = distrAppication(list(data[i]))
+            data[i] = DelSameElemsRecForDis(list(data[i]))
+            data[i] = DelOposLitRecForDis(list(data[i]))
+            data[i] = CheakAssocRec(list(data[i]))
 
     return data,preds
