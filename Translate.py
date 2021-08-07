@@ -399,6 +399,86 @@ def CheakAssocRec(data):
     return data
 
 
+def isIncude(l2, l):
+    if (len(l2) == 2 or l2[2] == "not"):
+        if(EqualExprs(l2,l)):
+            return True
+        else:
+            return False
+    else:
+        if (len(l) > 3 and l2[2] == l[2]):
+            list1 = RecToList(l[3],list())
+            list2 = RecToList(l2[3],list())
+            cheakList1 = list()
+            cheakList2 = list()
+            for i in range(0,len(list1)):
+                cheakList1.append(False)
+            for i in range(0,len(list2)):
+                cheakList2.append(False)
+
+            for i in range(0,len(list1)):
+                l_1 = list1[i]
+                for j in range(0, len(list2)):
+                    l_2 = list2[j]
+                    if (not cheakList1[i] and not cheakList2[j] and EqualExprs(l_1,l_2)):
+                        cheakList2[j] = True
+                        cheakList1[i] = True
+                        break
+            flag = True
+            for i in range(0,len(cheakList1)):
+                if (cheakList1[i] == False):
+                    flag = False
+            return flag
+        else:
+            list2 = RecToList(l2[3])
+            for i in range(0, len(list2)):
+                l2 = list2[i]
+                if (EqualExprs(l2,l)):
+                    return  True
+            return False
+
+def DelSameSets(data):
+    if (len(data) == 2 and data[0] != "expr"):
+        data[1] =DelSameSets(data[1])
+    elif (len(data) == 3):
+        data[2] = DelSameSets(data[2])
+        data[1] = DelSameSets(data[1])
+    else:
+        if (len(data) != 2):
+            res = list()
+            if (data[2] == "and"):
+                list1 = RecToList(data[3],list())
+                for i in range(0,len(list1)):
+                    l = list1[i]
+                    flag = True
+                    for j in range(0,len(list1)):
+                        l2 = list1[j]
+                        if (i != j and isIncude(l2,l)):
+                            flag = False
+                            break
+                    if (flag):
+                        res.append(l)
+                res = ListToRec(res,list(),0)
+                if (len(res) == 2):
+                    data = res[1]
+                    data = DelSameSets(data)
+                else:
+                    data[3] = res
+                    data[3] = DelSameSets(data[3])
+            else:
+                data[3] = DelSameSets(data[3])
+    return data
+
+
+def DelSameSetsRec(data):
+    if (len(data) > 2):
+        data[2] = DelSameSets(data[2])
+        data[1][3] = DelSameSetsRec(data[1][3])
+    else:
+        data[1][3] = DelSameSets(data[1][3])
+    return data
+
+
 def translateToCNF(data):
     preds = []
     for i in range(1,len(data)):
@@ -409,5 +489,6 @@ def translateToCNF(data):
             data[i] = DelSameElemsRecForDis(list(data[i]))
             data[i] = DelOposLitRecForDis(list(data[i]))
             data[i] = CheakAssocRec(list(data[i]))
+            data[i] = DelSameSetsRec(list(data[i]))
 
     return data,preds
