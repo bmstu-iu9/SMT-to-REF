@@ -479,6 +479,142 @@ def DelSameSetsRec(data):
     return data
 
 
+def hasOposElems(exp1, exp2):
+    if (OposExprs(exp1,exp2)):
+        return True,list(),list()
+    else:
+        list1 = list()
+        list2 = list()
+        if (len(exp1) > 2 and exp1[2] != "not"):
+            list1 = RecToList(exp1[3],list())
+        else:
+            list1.append(exp1)
+        if (len(exp2) > 2 and exp2[2] != "not"):
+            list2 = RecToList(exp2[3],list())
+        else:
+            list2.append(exp2)
+        cheak1 = list()
+        cheak2 = list()
+        for i in range(0, len(list1)):
+            cheak1.append(False)
+        for i in range(0, len(list2)):
+            cheak2.append(False)
+        flag = True
+        for i in range(0, len(list1)):
+            l = list1[i]
+            for j in range(0, len(list2)):
+                l2 = list2[j]
+                if (OposExprs(l,l2)):
+                    flag = False
+                    cheak1[i] = True
+                    cheak2[j] = True
+                    break
+        if (flag):
+            return False,list(),list()
+        else:
+            res1 = list()
+            res2 = list()
+            for i in range(0, len(list1)):
+                if (not cheak1[i]):
+                    res1.append(list1[i])
+            for i in range(0, len(list2)):
+                if (not cheak2[i]):
+                    res2.append(list2[i])
+            return True,res1,res2
+
+
+def createFalsePred(preds):
+    pred = list()
+    pred.append("p_false")
+    pred.append(list())
+    pred.append("=")
+    pred.append(list())
+    pred.append(list())
+    pred[3].append("const")
+    pred[3].append("a")
+    pred[4].append("const")
+    pred[4].append("b")
+    data = list()
+    preds.append(pred)
+    data.append("expr")
+    data.append(list())
+    data[1].append("pred")
+    data[1].append("(")
+    data[1].append("p_false")
+    data[1].append(")")
+    return data,preds
+
+
+
+def ResolRule(data,preds):
+    if (len(data) == 2 and data[0] != "expr"):
+        data[1],preds =ResolRule(data[1],preds)
+    elif (len(data) == 3):
+        data[2],preds = ResolRule(data[2],preds)
+        data[1],preds = ResolRule(data[1],preds)
+    else:
+        if (len(data) != 2):
+            res = list()
+            if (data[2] == "and"):
+                list1 = RecToList(data[3],list())
+                cheak1 = list()
+                cheak2 = list()
+                for i in range(0, len(list1)):
+                    cheak1.append(True)
+                for i in range(0,len(list1)):
+                    l = list1[i]
+                    flag = False
+                    for j in range(0,len(list1)):
+                        l2 = list1[j]
+                        if (i != j and cheak1[j] and cheak1[i]):
+                            flag = True
+                            cheak,l_1,l_2 = hasOposElems(l2,l)
+                            if (cheak):
+                                if (l_1 != list() and l_2 != list()):
+                                    cheak1[i] = False
+                                    cheak1[j] = False
+                                    flag = False
+                                    l_1.extend(l_2)
+                                    if (len(l_1) > 1):
+                                        midres = list()
+                                        midres.append("expr")
+                                        midres.append("(")
+                                        midres.append("or")
+                                        midres.append("(")
+                                        midres.append(list())
+                                        midres.append(")")
+                                        midres[3] = ListToRec(l_1,list(),0)
+                                        res.append(midres)
+                                    else:
+                                        res.append(l_1[0])
+                                    break
+                                else:
+                                    data,preds = createFalsePred(preds)
+                                    return data, preds
+                    if (flag):
+                        res.append(l)
+
+                res = ListToRec(res,list(),0)
+                if (len(res) == 2):
+                    data = res[1]
+                    data,preds = ResolRule(data,preds)
+                else:
+                    data[3] = res
+                    data[3],preds = ResolRule(data[3],preds)
+            else:
+                data[3],preds = ResolRule(data[3],preds)
+    return data,preds
+
+
+def ResolRuleRec(data,preds):
+    if (len(data) > 2):
+        data[2],preds = ResolRule(data[2],preds)
+        data[1][3],preds = ResolRuleRec(data[1][3],preds)
+    else:
+        data[1][3],preds = ResolRule(data[1][3],preds)
+    return data,preds
+
+
 def translateToCNF(data):
     preds = []
     for i in range(1,len(data)):
@@ -489,6 +625,7 @@ def translateToCNF(data):
             data[i] = DelSameElemsRecForDis(list(data[i]))
             data[i] = DelOposLitRecForDis(list(data[i]))
             data[i] = CheakAssocRec(list(data[i]))
+            data[i],preds = ResolRuleRec(list(data[i]),preds)
             data[i] = DelSameSetsRec(list(data[i]))
 
     return data,preds
